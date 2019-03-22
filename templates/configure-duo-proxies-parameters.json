@@ -1,0 +1,34 @@
+[
+  {
+    "ParameterKey": "DirectoryServiceId",
+    "ParameterValue": "d-9067101e1f"
+  },
+  {
+    "ParameterKey": "DuoApiHostName",
+    "ParameterValue": "api-7120ef9f.duosecurity.com"
+  },
+  {
+    "ParameterKey": "DuoIntegrationKey",
+    "ParameterValue": "DI139LQHRLBHPLGCYW3O"
+  },
+  {
+    "ParameterKey": "DuoSecretKey",
+    "ParameterValue": "9lLtKBHUNq8BDaRNW5IYjiNhlE4Frv6GQQybevw0"
+  },
+  {
+    "ParameterKey": "LatestAmiId",
+    "ParameterValue": "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2"
+  },
+  {
+    "ParameterKey": "RadiusProxyServerCount",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "RadiusPortNumber",
+    "ParameterValue": "1812"
+  },
+  {
+    "ParameterKey": "DuoFailMode",
+    "ParameterValue": "secure"
+  }
+]
