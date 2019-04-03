@@ -53,13 +53,9 @@ Metadata:
         RadiusProxyServerCount:
           default: RADIUS Servers
         RadiusPortNumber:
-          default: Port on which to listen for incoming RADIUS access requests
+          default: RADIUS Port Number
         DuoFailMode:
-          default: >
-            "Safe" mode allows authentication attempts to be permitted if primary
-            authentication succeeds in the event that Duo's service cannot be
-            contacted. "Secure" mode rejects authentication attempts if the Duo
-            service cannot be contacted.
+          default: Duo Fail Mode
 
 #-----------------------------------------------------------
 # Parameters
@@ -418,7 +414,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - ds:DescribeDirectories
-                Resource: "*" # TODO: SCOPE THIS DOWN
+                Resource: "*"
 
   #--------------------------------------------------
   # IAM profile to be used by the application instances
@@ -457,21 +453,6 @@ Resources:
         Value: Duo RADIUS Security Group
       - Key: duo:DirectoryServiceId
         Value: !Ref DirectoryServiceId
-
-  # #-------------------------------------------------
-  # # Security group rule for EXISTING domain controller
-  # # security group to allow egress to the Duo
-  # # RADIUS security group
-  # #-------------------------------------------------
-  # DomainControllerSecurityGroupEgress:
-  #   Type: AWS::EC2::SecurityGroupEgress
-  #   Properties:
-  #     GroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
-  #     IpProtocol: udp
-  #     FromPort: 1812
-  #     ToPort: 1812
-  #     DestinationSecurityGroupId: !Ref DuoRadiusProxySecurityGroup
-  #     Description: Allows UDP to RADIUS proxy servers
 
   #-------------------------------------------------
   # Launch configuration for RADIUS proxies
@@ -1105,4 +1086,3 @@ Outputs:
     Export:
       Name: !Sub ${AWS::StackName}-RadiusProxyBootstrapSystemsManagerBucket
     Value: !Ref RadiusProxyBootstrapSystemsManagerBucket
-
