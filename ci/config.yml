@@ -20,8 +20,5 @@ global:
  
 tests:
   quickstart-duo-mfat1:
-    parameter_input: quickstart-duo-mfa-example-params1.json
-    template_file: quickstart-duo-mfa-example1.template
-  quickstart-duo-mfat2:
-    parameter_input: quickstart-duo-mfa-example-params2.json
-    template_file: quickstart-duo-mfa-example2.template
+    parameter_input: configure-duo-proxies-parameters.json
+    template_file: configure-duo-proxies.yaml

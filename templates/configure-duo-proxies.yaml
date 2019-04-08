@@ -129,7 +129,7 @@ Parameters:
   QSS3BucketName:
     Description: S3 bucket name for the Quick Start assets.
     Type: String
-    Default: duo-mfa-us-east-1
+    Default: aws-quickstart
 
   QSS3KeyPrefix:
     Description: S3 key prefix for the Quick Start assets.
