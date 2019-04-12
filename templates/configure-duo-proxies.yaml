@@ -41,21 +41,21 @@ Metadata:
 
     ParameterLabels:
         DuoIntegrationKey:
-          default: Duo Integration Key
+          default: Duo integration key
         DuoSecretKey:
-          default: Duo Secret Key
+          default: Duo secret Key
         DuoApiHostName:
-          default: Duo Host Name
+          default: Duo host name
         DirectoryServiceId:
-          default: Directory Service ID
+          default: Directory service ID
         LatestAmiId:
-          default: Amazon Linux Image ID
+          default: Amazon Linux image ID
         RadiusProxyServerCount:
-          default: RADIUS Servers
+          default: RADIUS servers
         RadiusPortNumber:
-          default: RADIUS Port Number
+          default: RADIUS port number
         DuoFailMode:
-          default: Duo Fail Mode
+          default: Duo fail mode
 
 #-----------------------------------------------------------
 # Parameters
