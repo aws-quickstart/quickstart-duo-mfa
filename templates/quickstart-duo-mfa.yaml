@@ -18,14 +18,14 @@ Metadata:
 
     ParameterGroups:
       - Label:
-            default: Duo Account Settings
+            default: Duo Account settings
         Parameters:
           - DuoIntegrationKey
           - DuoSecretKey
           - DuoApiHostName
 
       - Label:
-            default: RADIUS Proxy Configuration Settings
+            default: RADIUS proxy configuration settings
         Parameters:
           - DirectoryServiceId
           - LatestAmiId
@@ -34,7 +34,7 @@ Metadata:
           - DuoFailMode
 
       - Label:
-            default: Quick Start Settings
+            default: AWS Quick Start configuration settings
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
@@ -45,7 +45,7 @@ Metadata:
         DuoSecretKey:
           default: Duo secret Key
         DuoApiHostName:
-          default: Duo host name
+          default: Duo hostname
         DirectoryServiceId:
           default: Directory service ID
         LatestAmiId:
@@ -56,6 +56,10 @@ Metadata:
           default: RADIUS port number
         DuoFailMode:
           default: Duo fail mode
+        QSS3BucketName:
+          default: Quick Start S3 bucket name
+        QSS3KeyPrefix:
+          default: Quick Start S3 key prefix
 
 #-----------------------------------------------------------
 # Parameters
@@ -127,13 +131,15 @@ Parameters:
     Default: "safe"
 
   QSS3BucketName:
+    Description: S3 bucket name for the Quick Start assets.
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: quickstart-duo-mfa
+    Default: aws-quickstart
     Type: String
 
   QSS3KeyPrefix:
+    Description: S3 key prefix for the Quick Start assets.
     AllowedPattern: ^[0-9a-zA-Z-/]*$
-    Default: src/
+    Default: quickstart-duo-mfa/
     Type: String
 
 
