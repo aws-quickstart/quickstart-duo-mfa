@@ -1182,11 +1182,6 @@ Outputs:
       Name: !Sub ${AWS::StackName}-DuoRadiusProxySecurityGroup
     Value: !Ref DuoRadiusProxySecurityGroup
 
-  DuoRadiusProxyVpc:
-    Export:
-      Name: !Sub ${AWS::StackName}-DuoRadiusProxyVpc
-    Value: !GetAtt GetDirectoryServiceDetails.VpcId
-
   DirectoryServiceId:
     Export:
       Name: !Sub ${AWS::StackName}-DirectoryServiceId
