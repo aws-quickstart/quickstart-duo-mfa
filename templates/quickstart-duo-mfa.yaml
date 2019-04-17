@@ -832,7 +832,7 @@ Resources:
         Value: !Ref DirectoryServiceId
       Code:
         S3Bucket: !Ref LambdaZipsBucket
-        S3Key: src/directory-service-mfa-configurator.zip
+        S3Key: !Sub '${QSS3KeyPrefix}directory-service-mfa-configurator.zip'
 
   # Allow SNS to invoke the Lambda function
   LambdaInvokePermission:
