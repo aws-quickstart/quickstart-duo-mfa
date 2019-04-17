@@ -18,7 +18,7 @@ Metadata:
 
     ParameterGroups:
       - Label:
-            default: Duo Account settings
+            default: Duo account settings
         Parameters:
           - DuoIntegrationKey
           - DuoSecretKey
@@ -43,7 +43,7 @@ Metadata:
         DuoIntegrationKey:
           default: Duo integration key
         DuoSecretKey:
-          default: Duo secret Key
+          default: Duo secret key
         DuoApiHostName:
           default: Duo hostname
         DirectoryServiceId:
@@ -121,10 +121,9 @@ Parameters:
   DuoFailMode:
     Type: String
     Description: >
-      "Safe" mode allows authentication attempts to be permitted if primary
-      authentication succeeds in the event that Duo's service cannot be
-      contacted. "Secure" mode rejects authentication attempts if the Duo
-      serivce cannot be contacted.
+      Once primary authentication succeeds, Safe mode allows authentication attempts,
+      if the Duo service cannot be contacted. Secure mode rejects authentication attempts,
+      if the Duo service cannot be contacted.
     AllowedValues:
       - "safe"
       - "secure"
