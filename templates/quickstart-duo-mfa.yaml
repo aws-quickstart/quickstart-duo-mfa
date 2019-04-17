@@ -628,11 +628,11 @@ Resources:
 
               # First, determine whether this is an AD Connector or a Managed AD,
               # then get the list of domain controllers for the directory.
-              DIRECTORY_SERVICE_TYPE=$(aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].Type --output text --region us-east-1)
+              DIRECTORY_SERVICE_TYPE=$(aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].Type --output text)
               if [ "$DIRECTORY_SERVICE_TYPE" = "ADConnector" ];then
-                  aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].ConnectSettings.ConnectIps --region us-east-1 > ip_addresses.json
+                  aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].ConnectSettings.ConnectIps > ip_addresses.json
               else
-                  aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].DnsIpAddrs --region us-east-1 > ip_addresses.json
+                  aws ds describe-directories --directory-ids ${DirectoryServiceId} --output json --query DirectoryDescriptions[0].DnsIpAddrs > ip_addresses.json
               fi
 
               echo
