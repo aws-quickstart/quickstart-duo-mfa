@@ -11,7 +11,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
   Configures Duo RADIUS servers for use in directory service MFA (can be used
-  for AWS SSO, WorkSpaces, and other SAML service providers)
+  for AWS SSO, WorkSpaces, and other SAML service providers)(qp-1ot8frso2)
 
 Metadata:
   AWS::CloudFormation::Interface:
