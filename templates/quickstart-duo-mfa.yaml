@@ -11,21 +11,21 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
   Configures Duo RADIUS servers for use in directory service MFA (can be used
-  for AWS SSO, WorkSpaces, and other SAML service providers)
+  for AWS SSO, WorkSpaces, and other SAML service providers)(qp-1ot8frso2)
 
 Metadata:
   AWS::CloudFormation::Interface:
 
     ParameterGroups:
       - Label:
-            default: Duo Account Settings
+            default: Duo account settings
         Parameters:
           - DuoIntegrationKey
           - DuoSecretKey
           - DuoApiHostName
 
       - Label:
-            default: RADIUS Proxy Configuration Settings
+            default: RADIUS proxy configuration settings
         Parameters:
           - DirectoryServiceId
           - LatestAmiId
@@ -34,7 +34,7 @@ Metadata:
           - DuoFailMode
 
       - Label:
-            default: Quick Start Settings
+            default: AWS Quick Start configuration settings
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
@@ -43,9 +43,9 @@ Metadata:
         DuoIntegrationKey:
           default: Duo integration key
         DuoSecretKey:
-          default: Duo secret Key
+          default: Duo secret key
         DuoApiHostName:
-          default: Duo host name
+          default: Duo hostname
         DirectoryServiceId:
           default: Directory service ID
         LatestAmiId:
@@ -56,6 +56,10 @@ Metadata:
           default: RADIUS port number
         DuoFailMode:
           default: Duo fail mode
+        QSS3BucketName:
+          default: Quick Start S3 bucket name
+        QSS3KeyPrefix:
+          default: Quick Start S3 key prefix
 
 #-----------------------------------------------------------
 # Parameters
@@ -117,23 +121,24 @@ Parameters:
   DuoFailMode:
     Type: String
     Description: >
-      "Safe" mode allows authentication attempts to be permitted if primary
-      authentication succeeds in the event that Duo's service cannot be
-      contacted. "Secure" mode rejects authentication attempts if the Duo
-      serivce cannot be contacted.
+      Once primary authentication succeeds, Safe mode allows authentication attempts,
+      if the Duo service cannot be contacted. Secure mode rejects authentication attempts,
+      if the Duo service cannot be contacted.
     AllowedValues:
       - "safe"
       - "secure"
     Default: "safe"
 
   QSS3BucketName:
+    Description: S3 bucket name for the Quick Start assets.
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    Default: quickstart-duo-mfa
+    Default: aws-quickstart
     Type: String
 
   QSS3KeyPrefix:
+    Description: S3 key prefix for the Quick Start assets.
     AllowedPattern: ^[0-9a-zA-Z-/]*$
-    Default: src/
+    Default: quickstart-duo-mfa/
     Type: String
 
 
@@ -253,8 +258,6 @@ Resources:
                           responseData['SecurityGroupId'] = directory[network]['SecurityGroupId']
                           responseData['SubnetId1'] = directory[network]['SubnetIds'][0]
                           responseData['SubnetId2'] = directory[network]['SubnetIds'][1]
-                          # responseData['DnsIpAddress1'] = directory['DnsIpAddrs'][0]
-                          # responseData['DnsIpAddress2'] = directory['DnsIpAddrs'][1]
                           response = SUCCESS
 
               if errorReason: response = FAILED
@@ -1009,8 +1012,6 @@ Resources:
                   DocumentName=os.environ['RunDocumentName']
               )
 
-              # OutputS3BucketName='managed-ad-mfa-d-9067101-radiusproxybootstrapsyst-rp24miai1w80',
-              # OutputS3KeyPrefix='logs'
 
               return response['Command']['CommandId']
 
@@ -1129,33 +1130,6 @@ Resources:
                   timer.cancel()
                   cfnresponse.send(event, context, status, {}, None)
 
-  # MyFunctionRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: lambda.amazonaws.com
-  #           Action: sts:AssumeRole
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-
-  # MyFunction:
-  #   DependsOn: CopyZips
-  #   Type: AWS::Lambda::Function
-  #   Properties:
-  #     Description: Example
-  #     Handler: lambda_function.handler
-  #     Runtime: python2.7
-  #     Role: !GetAtt 'MyFunctionRole.Arn'
-  #     Timeout: 300
-  #     Code:
-  #       S3Bucket: !Ref 'LambdaZipsBucket'
-  #       S3Key: !Sub '${QSS3KeyPrefix}functions/packages/CleanupPV/lambda.zip'
-
-
 #--------------------------------------------------
 # Outputs
 #--------------------------------------------------
@@ -1175,11 +1149,6 @@ Outputs:
     Export:
       Name: !Sub ${AWS::StackName}-DuoRadiusProxySecurityGroup
     Value: !Ref DuoRadiusProxySecurityGroup
-
-  DuoRadiusProxyVpc:
-    Export:
-      Name: !Sub ${AWS::StackName}-DuoRadiusProxyVpc
-    Value: !GetAtt GetDirectoryServiceDetails.VpcId
 
   DirectoryServiceId:
     Export:
