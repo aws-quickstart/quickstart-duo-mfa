@@ -258,8 +258,6 @@ Resources:
                           responseData['SecurityGroupId'] = directory[network]['SecurityGroupId']
                           responseData['SubnetId1'] = directory[network]['SubnetIds'][0]
                           responseData['SubnetId2'] = directory[network]['SubnetIds'][1]
-                          # responseData['DnsIpAddress1'] = directory['DnsIpAddrs'][0]
-                          # responseData['DnsIpAddress2'] = directory['DnsIpAddrs'][1]
                           response = SUCCESS
 
               if errorReason: response = FAILED
@@ -1014,8 +1012,6 @@ Resources:
                   DocumentName=os.environ['RunDocumentName']
               )
 
-              # OutputS3BucketName='managed-ad-mfa-d-9067101-radiusproxybootstrapsyst-rp24miai1w80',
-              # OutputS3KeyPrefix='logs'
 
               return response['Command']['CommandId']
 
@@ -1133,33 +1129,6 @@ Resources:
               finally:
                   timer.cancel()
                   cfnresponse.send(event, context, status, {}, None)
-
-  # MyFunctionRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: lambda.amazonaws.com
-  #           Action: sts:AssumeRole
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-
-  # MyFunction:
-  #   DependsOn: CopyZips
-  #   Type: AWS::Lambda::Function
-  #   Properties:
-  #     Description: Example
-  #     Handler: lambda_function.handler
-  #     Runtime: python2.7
-  #     Role: !GetAtt 'MyFunctionRole.Arn'
-  #     Timeout: 300
-  #     Code:
-  #       S3Bucket: !Ref 'LambdaZipsBucket'
-  #       S3Key: !Sub '${QSS3KeyPrefix}functions/packages/CleanupPV/lambda.zip'
-
 
 #--------------------------------------------------
 # Outputs
