@@ -116,7 +116,7 @@ Parameters:
     Type: String
     Description: >
       Port on which to listen for incoming RADIUS access requests
-    Default: 1812
+    Default: "1812"
 
   DuoFailMode:
     Type: String
@@ -195,7 +195,7 @@ Resources:
       Handler: index.lambda_handler
       MemorySize: 1024
       Role: !GetAtt GetDirectoryServiceMfaSettingsRole.Arn
-      Runtime: python3.6
+      Runtime: python3.7
       Timeout: 60
       Tags:
       - Key: duo:DirectoryServiceId
@@ -443,11 +443,11 @@ Resources:
         SourceSecurityGroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
         Description: Allows UDP from Directory Service Domain Controllers
       SecurityGroupEgress:
-      - IpProtocol: 6
+      - IpProtocol: "6"
         FromPort: 80
         ToPort: 80
         CidrIp: 0.0.0.0/0
-      - IpProtocol: 6
+      - IpProtocol: "6"
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
@@ -464,7 +464,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       ImageId: !Ref LatestAmiId
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       IamInstanceProfile: !Ref InstanceProfile
       SecurityGroups:
       - !Ref DuoRadiusProxySecurityGroup
@@ -816,7 +816,7 @@ Resources:
       Handler: lambda_function.lambda_handler
       MemorySize: 1024
       Role: !GetAtt UpdateDirectoryServiceMfaSettingsRole.Arn
-      Runtime: python3.6
+      Runtime: python3.7
       Timeout: 180
       Environment:
         Variables:
@@ -904,7 +904,7 @@ Resources:
       Handler: index.lambda_handler
       MemorySize: 1024
       Role: !GetAtt RadiusSharedSecretRotationRole.Arn
-      Runtime: python3.6
+      Runtime: python3.7
       Timeout: 60
       Environment:
         Variables:
@@ -1067,7 +1067,7 @@ Resources:
     Properties:
       Description: Copies objects from a source S3 bucket to a destination
       Handler: index.handler
-      Runtime: python2.7
+      Runtime: python3.7
       Role: !GetAtt CopyZipsRole.Arn
       Timeout: 240
       Code:
@@ -1076,6 +1076,7 @@ Resources:
           import logging
           import threading
           import boto3
+          from botocore.exceptions import ClientError, ParamValidationError
           import cfnresponse
 
 
@@ -1087,11 +1088,10 @@ Resources:
                       'Bucket': source_bucket,
                       'Key': key
                   }
-                  print('copy_source: %s' % copy_source)
-                  print('dest_bucket = %s'%dest_bucket)
-                  print('key = %s' %key)
-                  s3.copy_object(CopySource=copy_source, Bucket=dest_bucket,
-                        Key=key)
+                  print('copy_source =', copy_source)
+                  print('dest_bucket =', dest_bucket)
+                  print('key =', key)
+                  s3.copy_object(CopySource=copy_source, Bucket=dest_bucket, Key=key)
 
 
           def delete_objects(bucket, prefix, objects):
@@ -1112,7 +1112,7 @@ Resources:
                         / 1000.00) - 0.5, timeout, args=[event, context])
               timer.start()
 
-              print('Received event: %s' % json.dumps(event))
+              print('Received event:', json.dumps(event))
               status = cfnresponse.SUCCESS
               try:
                   source_bucket = event['ResourceProperties']['SourceBucket']
@@ -1123,9 +1123,12 @@ Resources:
                       delete_objects(dest_bucket, prefix, objects)
                   else:
                       copy_objects(source_bucket, dest_bucket, prefix, objects)
-              except Exception as e:
-                  logging.error('Exception: %s' % e, exc_info=True)
+              except ParamValidationError as err:
                   status = cfnresponse.FAILED
+                  logging.exception('Parameter validation error: %s', err)
+              except ClientError as err:
+                  status = cfnresponse.FAILED
+                  logging.exception('Unexpected error: %s', err)
               finally:
                   timer.cancel()
                   cfnresponse.send(event, context, status, {}, None)
