@@ -1,9 +1,5 @@
 [
   {
-    "ParameterKey": "DirectoryServiceId",
-    "ParameterValue": "d-9067101e1f"
-  },
-  {
     "ParameterKey": "DuoApiHostName",
     "ParameterValue": "api-7120ef9f.duosecurity.com"
   },
@@ -16,10 +12,6 @@
     "ParameterValue": "duo-secret-key"
   },
   {
-    "ParameterKey": "LatestAmiId",
-    "ParameterValue": "/aws/service/ami-amazon-linux-latest/amzn-ami-hvm-x86_64-gp2"
-  },
-  {
     "ParameterKey": "RadiusProxyServerCount",
     "ParameterValue": "2"
   },
@@ -30,6 +22,26 @@
   {
     "ParameterKey": "DuoFailMode",
     "ParameterValue": "secure"
+  },
+  {
+    "ParameterKey": "DomainDNSName",
+    "ParameterValue": "example.com"
+  },
+  {
+    "ParameterKey": "DomainNetBIOSName",
+    "ParameterValue": "EXAMPLE"
+  },
+  {
+    "ParameterKey": "DomainAdminUser",
+    "ParameterValue": "admin"
+  },
+  {
+    "ParameterKey": "DomainAdminPassword",
+    "ParameterValue": "$[taskcat_genpass_16]"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "$[taskcat_getkeypair]"
   },
   {
     "ParameterKey": "QSS3BucketName",
