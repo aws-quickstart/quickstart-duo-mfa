@@ -83,8 +83,7 @@ Parameters:
   AvailabilityZones:
     Description: >-
       List of Availability Zones to use for the subnets in the VPC. Note: The logical
-      order is preserved and 2 zones must be provided unless the Third Availability Zone parameter
-      is specified, in which case 3 zones must be provided.
+      order is preserved and 2 zones must be provided
     Type: List<AWS::EC2::AvailabilityZone::Name>
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*

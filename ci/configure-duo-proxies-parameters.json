@@ -1,5 +1,9 @@
 [
   {
+    "ParameterKey": "AvailabilityZones",
+    "ParameterValue": "$[taskcat_genaz_2]"
+  },
+  {
     "ParameterKey": "DuoApiHostName",
     "ParameterValue": "api-7120ef9f.duosecurity.com"
   },
