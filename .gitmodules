@@ -1,0 +1,6 @@
+[submodule "submodules/quickstart-aws-vpc"]
+	path = submodules/quickstart-aws-vpc
+	url = https://github.com/aws-quickstart/quickstart-aws-vpc.git
+[submodule "submodules/quickstart-microsoft-activedirectory"]
+	path = submodules/quickstart-microsoft-activedirectory
+	url = https://github.com/aws-quickstart/quickstart-microsoft-activedirectory.git
