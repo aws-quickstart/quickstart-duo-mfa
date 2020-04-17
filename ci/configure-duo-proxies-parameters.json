@@ -48,6 +48,10 @@
     "ParameterValue": "$[taskcat_getkeypair]"
   },
   {
+    "ParameterKey": "QSS3BucketRegion",
+    "ParameterValue": "$[taskcat_current_region]"
+  },
+  {
     "ParameterKey": "QSS3BucketName",
     "ParameterValue": "$[taskcat_autobucket]"
   }
