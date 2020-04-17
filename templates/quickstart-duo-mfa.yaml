@@ -37,6 +37,7 @@ Metadata:
             default: AWS Quick Start configuration settings
         Parameters:
           - QSS3BucketName
+          - QSS3BucketRegion
           - QSS3KeyPrefix
 
     ParameterLabels:
@@ -58,6 +59,8 @@ Metadata:
           default: Duo fail mode
         QSS3BucketName:
           default: Quick Start S3 bucket name
+        QSS3BucketRegion:
+          default: Quick Start S3 bucket region
         QSS3KeyPrefix:
           default: Quick Start S3 key prefix
 
@@ -134,6 +137,11 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: aws-quickstart
     Type: String
+  
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
 
   QSS3KeyPrefix:
     Description: S3 key prefix for the Quick Start assets.
@@ -141,6 +149,12 @@ Parameters:
     Default: quickstart-duo-mfa/
     Type: String
 
+#-----------------------------------------------------------
+# Resources
+#-----------------------------------------------------------
+
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 
 #-----------------------------------------------------------
 # Resources
@@ -1026,7 +1040,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt CopyZipsFunction.Arn
       DestBucket: !Ref LambdaZipsBucket
-      SourceBucket: !Ref QSS3BucketName
+      SourceBucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Prefix: !Ref QSS3KeyPrefix
       Objects:
         - functions/packages/directory-service-mfa-configurator.zip
@@ -1053,14 +1067,15 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:GetObject
-                Resource:
-                  - !Sub 'arn:aws:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*'
+                Resource: !Sub
+                  - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+                  - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
               - Effect: Allow
                 Action:
                   - s3:PutObject
                   - s3:DeleteObject
                 Resource:
-                  - !Sub 'arn:aws:s3:::${LambdaZipsBucket}/${QSS3KeyPrefix}*'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${LambdaZipsBucket}/${QSS3KeyPrefix}*'
 
   CopyZipsFunction:
     Type: AWS::Lambda::Function
