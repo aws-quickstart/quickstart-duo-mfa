@@ -405,7 +405,7 @@ Resources:
               Service: [ec2.amazonaws.com]
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
       Policies:
         - PolicyName: InstancePermissions
           PolicyDocument:
