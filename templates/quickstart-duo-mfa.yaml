@@ -457,11 +457,11 @@ Resources:
         SourceSecurityGroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
         Description: Allows UDP from Directory Service Domain Controllers
       SecurityGroupEgress:
-      - IpProtocol: 6
+      - IpProtocol: tcp
         FromPort: 80
         ToPort: 80
         CidrIp: 0.0.0.0/0
-      - IpProtocol: 6
+      - IpProtocol: tcp
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
