@@ -217,8 +217,8 @@ Resources:
       Code:
         ZipFile: !Sub |
           import boto3
+          import cfnresponse
           import json
-          from botocore.vendored import requests
 
           #----------------------------------------
           # Function handler
@@ -227,18 +227,16 @@ Resources:
 
               print (json.dumps(event))
 
-              SUCCESS = "SUCCESS"
-              FAILED = "FAILED"
+              responseStatus = cfnresponse.SUCCESS
+              responseData = {}
 
               # For Delete requests, immediately send a SUCCESS response.
               if 'RequestType' in event and 'Delete' in event['RequestType']:
-                  sendResponse(event, context, SUCCESS)
+                  cfnresponse.send(event, context, responseStatus, responseData)
                   return
 
-              errorReason = ''
-              response = ''
+              errorReason = None
               directories = []
-              responseData = {}
 
               if not 'ResourceProperties' in event and not 'directory_id' in event['ResourceProperties']:
                   errorReason = "No directory_id value provided"
@@ -272,43 +270,13 @@ Resources:
                           responseData['SecurityGroupId'] = directory[network]['SecurityGroupId']
                           responseData['SubnetId1'] = directory[network]['SubnetIds'][0]
                           responseData['SubnetId2'] = directory[network]['SubnetIds'][1]
-                          response = SUCCESS
 
-              if errorReason: response = FAILED
+              if errorReason:
+                  responseStatus = cfnresponse.FAILED
 
               # Send the response to CloudFormation. Always send a success response;
               # otherwise, the CloudFormation stack execution will fail.
-              sendResponse(event, context, response, responseData, errorReason)
-
-          def sendResponse(event, context, responseStatus, responseData=None, errorReason='', physicalResourceId=None, noEcho=False):
-              responseUrl = event['ResponseURL']
-
-              responseBody = {}
-              responseBody['Status'] = responseStatus
-              responseBody['Reason'] = errorReason
-              responseBody['PhysicalResourceId'] = physicalResourceId or context.log_stream_name
-              responseBody['StackId'] = event['StackId']
-              responseBody['RequestId'] = event['RequestId']
-              responseBody['LogicalResourceId'] = event['LogicalResourceId']
-              responseBody['NoEcho'] = noEcho
-              responseBody['Data'] = responseData
-
-              json_responseBody = json.dumps(responseBody)
-
-              print("Response body:\n" + json_responseBody)
-
-              headers = {
-                  'content-type' : '',
-                  'content-length' : str(len(json_responseBody))
-              }
-
-              try:
-                  response = requests.put(responseUrl,
-                                          data=json_responseBody,
-                                          headers=headers)
-                  print("Status code: " + response.reason)
-              except Exception as e:
-                  print("sendResponse(..) failed executing requests.put(..): " + str(e))
+              cfnresponse.send(event, context, responseStatus, responseData, reason=errorReason)
 
 
 
