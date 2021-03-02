@@ -12,7 +12,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: >
   Configures Duo RADIUS servers for use in directory service MFA (can be used
   for AWS SSO, WorkSpaces, and other SAML service providers)(qs-1pgpn37rj)
-
+s
 Metadata:
   AWS::CloudFormation::Interface:
 
@@ -137,7 +137,7 @@ Parameters:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     Default: aws-quickstart
     Type: String
-  
+
   QSS3BucketRegion:
     Default: 'us-east-1'
     Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
@@ -150,7 +150,7 @@ Parameters:
     Type: String
 
 #-----------------------------------------------------------
-# Resources
+# Conditions
 #-----------------------------------------------------------
 
 Conditions:
@@ -215,10 +215,10 @@ Resources:
       - Key: duo:DirectoryServiceId
         Value: !Ref DirectoryServiceId
       Code:
-        ZipFile: !Sub |
+        ZipFile: |
           import boto3
           import json
-          from botocore.vendored import requests
+          import cfnresponse
 
           #----------------------------------------
           # Function handler
@@ -232,7 +232,7 @@ Resources:
 
               # For Delete requests, immediately send a SUCCESS response.
               if 'RequestType' in event and 'Delete' in event['RequestType']:
-                  sendResponse(event, context, SUCCESS)
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, None)
                   return
 
               errorReason = ''
@@ -272,44 +272,13 @@ Resources:
                           responseData['SecurityGroupId'] = directory[network]['SecurityGroupId']
                           responseData['SubnetId1'] = directory[network]['SubnetIds'][0]
                           responseData['SubnetId2'] = directory[network]['SubnetIds'][1]
-                          response = SUCCESS
+                          response = cfnresponse.SUCCESS
 
-              if errorReason: response = FAILED
+              if errorReason: response = cfnresponse.FAILED
 
               # Send the response to CloudFormation. Always send a success response;
               # otherwise, the CloudFormation stack execution will fail.
-              sendResponse(event, context, response, responseData, errorReason)
-
-          def sendResponse(event, context, responseStatus, responseData=None, errorReason='', physicalResourceId=None, noEcho=False):
-              responseUrl = event['ResponseURL']
-
-              responseBody = {}
-              responseBody['Status'] = responseStatus
-              responseBody['Reason'] = errorReason
-              responseBody['PhysicalResourceId'] = physicalResourceId or context.log_stream_name
-              responseBody['StackId'] = event['StackId']
-              responseBody['RequestId'] = event['RequestId']
-              responseBody['LogicalResourceId'] = event['LogicalResourceId']
-              responseBody['NoEcho'] = noEcho
-              responseBody['Data'] = responseData
-
-              json_responseBody = json.dumps(responseBody)
-
-              print("Response body:\n" + json_responseBody)
-
-              headers = {
-                  'content-type' : '',
-                  'content-length' : str(len(json_responseBody))
-              }
-
-              try:
-                  response = requests.put(responseUrl,
-                                          data=json_responseBody,
-                                          headers=headers)
-                  print("Status code: " + response.reason)
-              except Exception as e:
-                  print("sendResponse(..) failed executing requests.put(..): " + str(e))
-
+              cfnresponse.send(event, context, response, responseData, None)
 
 
   #--------------------------------------------------
@@ -319,7 +288,6 @@ Resources:
   #------------------------------------------------
   GetDirectoryServiceDetails:
     Type: Custom::GetDirectoryService
-    DependsOn: GetDirectoryServiceFunction
     Properties:
       ServiceToken: !GetAtt GetDirectoryServiceFunction.Arn
       directory_id: !Ref DirectoryServiceId
@@ -457,11 +425,11 @@ Resources:
         SourceSecurityGroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
         Description: Allows UDP from Directory Service Domain Controllers
       SecurityGroupEgress:
-      - IpProtocol: 6
+      - IpProtocol: "6"
         FromPort: 80
         ToPort: 80
         CidrIp: 0.0.0.0/0
-      - IpProtocol: 6
+      - IpProtocol: "6"
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
@@ -494,7 +462,7 @@ Resources:
         - !GetAtt GetDirectoryServiceDetails.SubnetId1
         - !GetAtt GetDirectoryServiceDetails.SubnetId2
       LaunchConfigurationName: !Ref RadiusProxyLaunchConfig
-      MinSize: 1
+      MinSize: "1"
       MaxSize: !Ref RadiusProxyServerCount
       DesiredCapacity: !Ref RadiusProxyServerCount
       # Notify the Lambda function to update the RADIUS settings.
@@ -560,10 +528,6 @@ Resources:
       Content:
         schemaVersion: "2.2"
         description: Installs and configures Duo proxy service
-        # parameters:
-        #   SecretManagerName:
-        #     type: String
-        #     description: Name of the Secrets Manager password
 
         mainSteps:
 
@@ -753,6 +717,7 @@ Resources:
     # Don't delete the bucket when the stack is deleted. The deletion attempt
     # would otherwise fail if there are objects in the bucket.
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       # Enable encryption
       BucketEncryption:
@@ -931,7 +896,7 @@ Resources:
       - Key: duo:DirectoryServiceId
         Value: !Ref DirectoryServiceId
       Code:
-        ZipFile: !Sub |
+        ZipFile: |
           import boto3
           import os
           import json
@@ -1031,7 +996,7 @@ Resources:
 
   #--------------------------------------------------
   # Deployment helpers
-  #-------------------------------------------------- 
+  #--------------------------------------------------
   LambdaZipsBucket:
     Type: AWS::S3::Bucket
 
@@ -1121,6 +1086,9 @@ Resources:
 
 
           def handler(event, context):
+
+              # This comment was added to force an update on this function's code to use urllib3.
+
               # make sure we send a failure to CloudFormation if the function
               # is going to timeout
               timer = threading.Timer((context.get_remaining_time_in_millis()
