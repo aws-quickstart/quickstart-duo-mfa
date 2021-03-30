@@ -18,4 +18,33 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 
 == Troubleshooting
 
-<Steps for troubleshooting the deployment.>
+If your directory service’s MFA status is in a *Failed* status, please check the following:
+
+    * Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start solution launches the RADIUS ECS tasks in the same subnet as the DNS servers in your directory service. The subnet must have a route to the internet (typically through a NAT gateway) in order to install the Duo Authentication Proxy and other required tools used to configure the directory service.
+    * Ensure that the security group associated with your directory service’s DNS servers have a rule that allows output traffic on port 1812  to the security group created by this solution.
+        * To find the security group associated with your DNS servers, navigate to the Directory Service console, and note the IP addresses under *DNS address*.
+        * Navigate to the EC2 console, and choose the Network Interfaces link from the menu.
+        * In the search field, enter one of the DNS IP addresses found in the previous step.
+        * From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for UDP to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the CloudFormation stack output.
+
+For advanced troubleshooting, do the following:
+
+    * View the Lambda function logs in CloudWatch Logs
+    * View the RADIUS proxy logs in CloudWatch Logs
+
+=== View the Lambda function logs in CloudWatch Logs
+
+    * Navigate to the CloudFormation console, and select the stack that was just launched.
+    * Choose the *Resources* tab.
+    * Look for *UpdateDirectoryServiceMfaSettingsCloudWatchLogsGroup* in the *Logical ID* column and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Lambda function that is responsible for configuring the MFA settings for your directory service.
+    * You should see one or more log streams. Select each one and look for specific error conditions. 
+
+=== View the RADIUS proxy logs in CloudWatch Logs
+
+    * Navigate to the CloudFormation console, and select the stack that was just launched.
+    * Choose the *Resources* tab.
+    * Look for *RadiusProxyCloudWatchLogsGroup* in the *Logical ID* column and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Duo Authentication Proxy running on each of the RADIUS ECS tasks.
+    * You should see one or more log streams; each stream represents logs from the Duo Authentication Proxy on each ECS tasks. Select each of the log streams, and look for possible error messages.
+    * If there aren’t any log streams in the log group, the instances might not have access to the internet. 
+
+
