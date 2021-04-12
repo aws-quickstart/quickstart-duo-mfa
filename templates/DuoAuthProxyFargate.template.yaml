@@ -44,8 +44,8 @@ Metadata:
         Parameters:
           - CodeCommitRepoName
           - CodeCommitBranchName
-          - CodeCommitS3Bucket
-          - CodeCommitS3BucketKey
+          # - CodeCommitS3Bucket
+          # - CodeCommitS3BucketKey
       - Label:
             default: CodePipeline Configuration
         Parameters:
@@ -54,13 +54,19 @@ Metadata:
             default: KMS Configuration
         Parameters:
           - AdminArn
+      - Label:
+          default: Quick Start configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3BucketRegion
+          - QSS3KeyPrefix
     ParameterLabels:
         AdminArn:
           default: KMS Admin Role
-        CodeCommitS3Bucket:
-          default: CodeCommit S3 Bucket
-        CodeCommitS3BucketKey:
-          default: CodeCommit S3 Bucket Key
+        # CodeCommitS3Bucket:
+        #   default: CodeCommit S3 Bucket
+        # CodeCommitS3BucketKey:
+        #   default: CodeCommit S3 Bucket Key
         EcrRepoName:
           default: ECR Repo Name
         EcrImageRetention:
@@ -99,7 +105,12 @@ Metadata:
           default: RADIUS port number
         DuoFailMode:
           default: Duo fail mode
-        
+        QSS3BucketName:
+          default: Quick Start S3 bucket name
+        QSS3BucketRegion:
+          default: Quick Start S3 bucket region
+        QSS3KeyPrefix:
+          default: Quick Start S3 key prefix
 #-----------------------------------------------------------
 # Parameters
 #-----------------------------------------------------------
@@ -111,18 +122,18 @@ Parameters:
     Description: IAM Arn that will have admin rights to the KMS key. If left empty, KMS Key Policy will not have an admin role to administer it.
     Default: ''
 
-  CodeCommitS3Bucket:
-    Type: String
-    Description: S3 bucket name where the code for Duo AuthProxy is located
-    AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
-    ConstraintDescription: "S3 Bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
+  # CodeCommitS3Bucket:
+  #   Type: String
+  #   Description: S3 bucket name where the code for Duo AuthProxy is located
+  #   AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
+  #   ConstraintDescription: "S3 Bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
     
     
-  CodeCommitS3BucketKey:
-    Type: String
-    Description: S3 bucket key location where the code for Duo AuthProxy
-    AllowedPattern: "^[0-9a-zA-Z-/.]*$"
-    ConstraintDescription: "S3 Bucket key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
+  # CodeCommitS3BucketKey:
+  #   Type: String
+  #   Description: S3 bucket key location where the code for Duo AuthProxy
+  #   AllowedPattern: "^[0-9a-zA-Z-/.]*$"
+  #   ConstraintDescription: "S3 Bucket key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
     
   EcrRepoName:
     Type: String
@@ -135,6 +146,7 @@ Parameters:
     Type: Number
     Description: Number of days to retain the ECR image
     ConstraintDescription: 'Must be in the range [30-600].'
+    Default: 30
     MinValue: 30
     MaxValue: 600
   CodeCommitRepoName:
@@ -221,6 +233,7 @@ Parameters:
 
   RadiusProxyServerCount:
     Type: Number
+    Default: 2
     AllowedValues:
       - 1
       - 2
@@ -262,7 +275,29 @@ Parameters:
       - 8
       - 9 
       - 10
-
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description: S3 bucket name for the Quick Start assets. This name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).
+    Default: quickstart-duo-mfa/
+    Description: S3 key prefix for the Quick Start assets. This prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
 #-----------------------------------------------------------
 # Conditions
 #-----------------------------------------------------------
@@ -1174,7 +1209,7 @@ Resources:
     Properties: 
       RepositoryName: !Ref EcrRepoName
       ImageScanningConfiguration: 
-        scanOnPush: "true"
+        ScanOnPush: "true"
       LifecyclePolicy:
         LifecyclePolicyText: !Sub |
                               {
@@ -1235,14 +1270,15 @@ Resources:
   #check
   DuoEcrCodeCommitRepo:
     Type: AWS::CodeCommit::Repository
+    DependsOn: DuoCleanupCustomResource
     Properties:
       RepositoryName: !Ref CodeCommitRepoName
       RepositoryDescription: CodeCommit Repo with code for building DuoAuthentication Proxy ECR images
       Code:
         BranchName: !Ref CodeCommitBranchName
         S3:
-          Bucket: !Ref CodeCommitS3Bucket
-          Key: !Ref CodeCommitS3BucketKey
+          Bucket: !Ref ArtifactBucket
+          Key: !Sub ${QSS3KeyPrefix}scripts/packages/code_commit.zip
   
   #--------------------------------------------------
   # Create an IAM role for Duo CodePipeline
@@ -1742,7 +1778,132 @@ Resources:
           - kms:GetPublicKey
           Effect: Allow
           Resource: !GetAtt DuoKmsKey.Arn
-    
+
+  #--------------------------------------------------
+  # Create a IAM role for Cleanup
+  #--------------------------------------------------
+  DuoCleanupServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - !Ref DuoKmsIamPolicy
+      Policies:
+        - PolicyName: DuoEcrCleanup
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ecr:DescribeImages'
+                  - 'ecr:BatchDeleteImage'
+                Resource: !GetAtt DuoEcrRepository.Arn
+        - PolicyName: s3-access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 's3:GetObject'
+                  - 's3:DeleteObject'
+                  - 's3:ListBucketVersion*'
+                  - 's3:ListBucket'
+                  - 's3:DeleteObjectVersion'
+                  - 's3:GetObjectVersion*'
+                Resource: 
+                  - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}/*'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}'
+                  - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}/*'
+
+  #--------------------------------------------------
+  # Create a Lambda function for Cleanup
+  #--------------------------------------------------
+  DuoCleanupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Cleanup ECR images and S3 artifact bucket on delete of stack
+      Handler: index.lambda_handler
+      KmsKeyArn: !GetAtt DuoKmsKey.Arn
+      Role: !GetAtt DuoCleanupServiceRole.Arn
+      Runtime: python3.7
+      Timeout: 900
+      Environment:
+        Variables:
+          DuoEcr: !Ref DuoEcrRepository
+          DuoBucket: !Ref ArtifactBucket
+      Code:
+        ZipFile: |
+          import json
+          import cfnresponse
+          import boto3
+          import os
+          import time
+          ecr = boto3.client('ecr')
+          s3 = boto3.resource('s3')
+          ecr_repo = os.environ['DuoEcr']
+          artifact_bucket = os.environ['DuoBucket']
+          bucket = s3.Bucket(artifact_bucket)
+          
+          def lambda_handler(event, context):
+            print(json.dumps(event))
+            source_bucket = event['ResourceProperties']['Source']
+            source_bucket_prefix = event['ResourceProperties']['Prefix']
+            objects = event['ResourceProperties']['Objects']
+            try:
+              if event['RequestType'] == 'Delete':
+                print('Delete event, will clean up ECR and S3')
+                time.sleep(120)
+                delete_all_ecr_images(ecr_repo)
+                bucket.object_versions.all().delete()
+              elif event['RequestType'] == 'Create':
+                print('Create event, will populate S3')
+                s3 = boto3.client('s3')
+                for o in objects:
+                    key = source_bucket_prefix + o
+                    copy_source={
+                        'Bucket': source_bucket,
+                        'Key': key
+                    }
+                    s3.copy_object(CopySource=copy_source, Bucket=artifact_bucket, Key=key)
+
+              else:
+                print('This is Update event, will send success')
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, '')
+            except:
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, '')
+          
+          def delete_all_ecr_images(ecr_repo):
+            len_images = ecr.describe_images(repositoryName=ecr_repo)['imageDetails']
+            while len(len_images) > 0:
+              for image in len_images:
+                ecr.batch_delete_image(repositoryName=ecr_repo,imageIds = [{'imageDigest': image['imageDigest']}])
+              len_images = ecr.describe_images(repositoryName=ecr_repo)['imageDetails']
+
+  #--------------------------------------------------
+  # Create a Custom Resource for Cleanup
+  #--------------------------------------------------
+  DuoCleanupCustomResource:
+    Type: Custom::DuoCleanup
+    Properties:
+      ServiceToken: !GetAtt DuoCleanupFunction.Arn
+      DuoEcr: !Ref DuoEcrRepository
+      DuoBucket: !Ref ArtifactBucket
+      Source: !Ref QSS3BucketName
+      Prefix: !Ref QSS3KeyPrefix
+      SourceRegion: !Ref QSS3BucketRegion
+      Objects:
+        - scripts/packages/code_commit.zip
+
+
 #--------------------------------------------------
 # Outputs
 #--------------------------------------------------
