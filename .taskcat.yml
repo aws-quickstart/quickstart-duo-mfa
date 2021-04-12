@@ -17,19 +17,18 @@ tests:
   duomfa:
     parameters:
       AvailabilityZones: $[taskcat_genaz_2]
-      DuoApiHostName: api-7120ef9f.duosecurity.com
-      DuoIntegrationKey: duo-integration-key
-      DuoSecretKey: duo-secret-key
+      DuoApiHostName: override
+      DuoIntegrationKey: override
+      DuoSecretKey: override
       RadiusProxyServerCount: 2
       RadiusPortNumber: 1812
-      DuoFailMode: secure
       DomainDNSName: example.com
       DomainNetBIOSName: EXAMPLE
-      DomainAdminUser: admin
       DomainAdminPassword: $[taskcat_genpass_16]
       KeyPairName: $[taskcat_getkeypair]
+      NotificationEmail: test@test.com
       QSS3BucketRegion: $[taskcat_current_region]
       QSS3BucketName: $[taskcat_autobucket]
     regions:
       - us-east-1
-    template: templates/quickstart-duo-mfa-main.template.yaml
+    template: templates/duo-proxy-fargate-main.template.yaml
