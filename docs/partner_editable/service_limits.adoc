@@ -11,6 +11,8 @@
 |AWS Secrets Manager secrets |1
 |Lambda functions |3
 |CodePipeline pipelines |1
+|CodeCommit repositories |1
+|Simple Notification Service (SNS) topics |2
 |CloudWatch alarms |2
 |Amazon Elastic Container Registry (ECR) images |1
 |===
