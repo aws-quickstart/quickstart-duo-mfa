@@ -1,13 +1,7 @@
 // If no preperation is required, remove all content from here
 
-==== Prepare your AWS account
-
-_Describe any setup required in the AWS account prior to template launch_
-
 ==== Prepare your {partner-company-name} account
 
-_Describe any setup required in the partner portal/account prior to template launch_
-
-==== Prepare for the deployment
-
-_Describe any preparation required to complete the product build, such as obtaining licenses or placing files in S3_
+1. If you haven't already, https://signup.duo.com/[sign up for a Duo account].
+2. Log into the Duo Admin Panel at https://admin.duosecurity.com/login[https://admin.duosecurity.com/login] or https://admin.duofederal.com[https://admin.duofederal.com] (for commmercial or Federal accounts, respectively) and navigate to *Applications*.
+3. Click *Protect an Application* and locate the entry for *Auth API* in the applications list. Click *Protect* to the far-right to configure the application and get your *integration key*, *secret key*, and *API hostname*. You'll need this information to deploy the Quick Start. See https://duo.com/docs/protecting-applications[Protecting Applications] for more information about protecting applications in Duo and additional application options.

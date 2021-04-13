@@ -2,4 +2,10 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
-<Describe how the software works on AWS.>
+Traditional login on the AWS Management Console involves providing a user name and password. To help mitigate the threat of leaked credentials, AWS offers the ability to enable MFA for your AWS Identity and Access Management (IAM) users or your root credentials.
+
+If you’re using a federation mechanism like AWS Single Sign-On (AWS SSO) or Active Directory Federation Services (AD FS) with an AWS Directory Service option, however, you must configure your own MFA implementation. One common approach is to use an MFA provider like Duo. In this scenario, you log in to the AWS Management Console using your Active Directory (AD) credentials. You then use the https://duo.com/product/trusted-users/two-factor-authentication/duo-mobile[Duo Mobile app], along with Duo's wide variety of authentication methods, and your AD credentials to authenticate you to AWS.
+
+For a quick primer on configuring MFA manually using your on-premises Remote Authentication Dial-In User Service (RADIUS) implementation, see the blog post https://aws.amazon.com/blogs/security/how-to-enable-multi-factor-authentication-for-amazon-workspaces-and-amazon-quicksight-by-using-microsoft-ad-and-on-premises-credentials/[How to Enable Multi-Factor Authentication for AWS Services by Using AWS Microsoft AD and OnPremises Credentials].
+
+If you don’t have a current RADIUS implementation, you can use this solution to automate the process of provisioning a RADIUS infrastructure in AWS using the https://duo.com/docs/authproxy-reference[Duo Authentication Proxy] as the MFA provider. This provides an additional layer of security for accessing your critical resources integrated with AWS Directory Service.
