@@ -4,4 +4,4 @@
 
 This guide provides instructions for deploying the {partner-product-short-name} Quick Start reference architecture on the AWS Cloud.
 
-This Quick Start is for those who currently use or intend to use AWS Directory Service directory types such as AWS Directory Service for Microsoft Active Directory (also known as AWS Managed Microsoft AD) or Active Directory Connector (AD Connector), and who want to apply multi-factor authentication (MFA).
+This Quick Start is for those who currently use or intend to use AWS Directory Service directory types such as AWS Directory Service for Microsoft Active Directory (also known as AWS Managed Microsoft AD) or Active Directory Connector (AD Connector), and who want to apply multi-factor authentication (MFA) with https://duo.com/product/multi-factor-authentication-mfa[Duo].

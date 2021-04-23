@@ -26,15 +26,15 @@ If your directory service’s MFA status is in a *Failed* status, please check t
 
     * Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start solution launches the RADIUS ECS tasks in the same subnet as the DNS servers in your directory service. The subnet must have a route to the internet (typically through a NAT gateway) in order to install the Duo Authentication Proxy and other required tools used to configure the directory service.
     * Ensure that the security group associated with your directory service’s DNS servers have a rule that allows output traffic on port 1812  to the security group created by this solution.
-        * To find the security group associated with your DNS servers, navigate to the Directory Service console, and note the IP addresses under *DNS address*.
-        * Navigate to the EC2 console, and choose the Network Interfaces link from the menu.
-        * In the search field, enter one of the DNS IP addresses found in the previous step.
-        * From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for UDP to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the CloudFormation stack output.
+        ** To find the security group associated with your DNS servers, navigate to the Directory Service console, and note the IP addresses under *DNS address*.
+        ** Navigate to the EC2 console, and choose the Network Interfaces link from the menu.
+        ** In the search field, enter one of the DNS IP addresses found in the previous step.
+        ** From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for UDP to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the CloudFormation stack output.
 
-For advanced troubleshooting, do the following:
+For advanced troubleshooting, perform the following:
 
-    * View the Lambda function logs in CloudWatch Logs
-    * View the RADIUS proxy logs in CloudWatch Logs
+    * View the Lambda function logs in CloudWatch Logs.
+    * View the RADIUS proxy logs in CloudWatch Logs.
 
 === View the Lambda function logs in CloudWatch Logs
 
