@@ -1,5 +1,5 @@
 // We need to work around Step numbers here if we are going to potentially exclude the AMI subscription
-=== Sign in to your AWS account
+=== Confirm your AWS account configuration
 
 . Sign in to your AWS account at https://aws.amazon.com with an IAM user role that has the necessary permissions. For details, see link:#_planning_the_deployment[Planning the deployment] earlier in this guide.
 . Make sure that your AWS account is configured correctly, as discussed in the link:#_technical_requirements[Technical requirements] section.
@@ -128,6 +128,6 @@ After each task is configured, the ECS service sends an event saying the service
  
 That message acts as an event in CloudWatch which triggers a Lambda function to process the event. This event finds the IP address of Fargate task and updates the SSM parameter DuoServiceIps which triggers another event and updates the Directory Service MFA. The whole process takes 2-3 minutes.
  
-Application Autoscaling in the ECS service will automatically scale the ECS tasks when CPU or Memory limits are reached. This allows for handling spikes in traffic (i.e. early morning logins). Likewise, when the ECS Service does not see a lot of activity Application Autoscaling decreases the number of tasks, and then triggers the preceding workflow to get IP addresses from Lambda functions and update directory service’s RADIUS configuration.
+Application Autoscaling in the ECS service automatically scales the ECS tasks when CPU or memory limits are reached. This allows for handling spikes in traffic, such as early morning logins. Likewise, when the ECS service does not see a lot of activity Application Autoscaling decreases the number of tasks, and then triggers the preceding workflow to get IP addresses from Lambda functions and update the Directory Service RADIUS configuration.
 
-It is recommended to stand up a regular trigger on a pipeline to get the latest code and build it. By default, the trigger frequency is set to weekly, which can be changed with a CloudFormation parameter during stack creation or update. When the secrets are rotated the newest image is automatically pulled and deployed. ECR is configured to scan on push and builds can wait to see the results of the scan. If the build or scan fails then Duo Admins are notified.
+It is recommended to stand up a regular trigger on a pipeline to get the latest code and build it. By default, the trigger frequency is set to weekly, which can be changed with a CloudFormation parameter during stack creation or update. When the secrets are rotated the newest image is automatically pulled and deployed. ECR is configured to scan on push and builds can wait to see the results of the scan. If the build or scan fails then Duo administrators are notified.

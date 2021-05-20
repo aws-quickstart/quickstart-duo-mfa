@@ -15,17 +15,17 @@ For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/U
 
 *A.* Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template-size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
-*Q.* Fargate containers fail with the error `ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secret from asm: service call has been retried 1 time(s): failed to fetch secret `
+*Q.* Fargate containers fail with the error `ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secret from asm: service call has been retried 1 time(s): failed to fetch secret`.
 
-*A.* The Fargate subnets are same as the Directory Service Subnets. If the directory service subnets is not private on a NAT then the above error occurs. The template will need to change to allow networking for Fargate tasks see https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-networking.html[Fargate task networking^].
+*A.* This error occurs if a Directory Service subnet is not private on a NAT. The Fargate subnets are same as the Directory Service subnets. Change the template to allow networking for Fargate tasks. See https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-networking.html[Fargate task networking^].
 
 
 == Troubleshooting
 
-If your directory service’s MFA status is in a *Failed* status, please check the following:
+If your Directory Service’s MFA status is in a *Failed* status, check the following:
 
-    * Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start solution launches the RADIUS ECS tasks in the same subnet as the DNS servers in your directory service. The subnet must have a route to the internet (typically through a NAT gateway) in order to install the Duo Authentication Proxy and other required tools used to configure the directory service.
-    * Ensure that the security group associated with your directory service’s DNS servers have a rule that allows output traffic on port 1812  to the security group created by this solution.
+    * Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start solution launches the RADIUS ECS tasks in the same subnet as the DNS servers in Directory Service. The subnet must have a route to the internet (typically through a NAT gateway) in order to install the Duo Authentication Proxy and other required tools used to configure Directory Service.
+    * Ensure that the security group associated with the Directory Service DNS servers have a rule that allows output traffic on port 1812 to the security group created by this solution.
         ** To find the security group associated with your DNS servers, navigate to the Directory Service console, and note the IP addresses under *DNS address*.
         ** Navigate to the EC2 console, and choose the Network Interfaces link from the menu.
         ** In the search field, enter one of the DNS IP addresses found in the previous step.
@@ -40,7 +40,7 @@ For advanced troubleshooting, perform the following:
 
     * Navigate to the CloudFormation console, and select the stack that was just launched.
     * Choose the *Resources* tab.
-    * Look for *UpdateDirectoryServiceMfaSettingsCloudWatchLogsGroup* in the *Logical ID* column and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Lambda function that is responsible for configuring the MFA settings for your directory service.
+    * Look for *UpdateDirectoryServiceMfaSettingsCloudWatchLogsGroup* in the *Logical ID* column and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Lambda function that is responsible for configuring the MFA settings for Directory Service.
     * You should see one or more log streams. Select each one and look for specific error conditions. 
 
 === View the RADIUS proxy logs in CloudWatch Logs

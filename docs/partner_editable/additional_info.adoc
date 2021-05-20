@@ -4,4 +4,4 @@
 == Security
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
-This Quick Start deploys Duo via Fargate in a way that is ready for compliance with the https://www.acq.osd.mil/cmmc/[Cybersecurity Maturity Model Certification (CMMC)]. CMMC certification is typically required of US Department of Defense (DOD) contractors.
+This Quick Start deploys Duo using Fargate in a way that is ready for compliance with the https://www.acq.osd.mil/cmmc/[Cybersecurity Maturity Model Certification (CMMC)^]. CMMC certification is typically required of U.S. Department of Defense contractors.
