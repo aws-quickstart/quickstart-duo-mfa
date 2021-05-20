@@ -4,4 +4,18 @@
 
 1. If you haven't already, https://signup.duo.com/[sign up for a Duo account].
 2. Log into the Duo Admin Panel at https://admin.duosecurity.com/login[https://admin.duosecurity.com/login] or https://admin.duofederal.com[https://admin.duofederal.com] (for commmercial or Federal accounts, respectively) and navigate to *Applications*.
-3. Click *Protect an Application* and locate the entry for *Auth API* in the applications list. Click *Protect* to the far-right to configure the application and get your *integration key*, *secret key*, and *API hostname*. You'll need this information to deploy the Quick Start. See https://duo.com/docs/protecting-applications[Protecting Applications] for more information about protecting applications in Duo and additional application options.
+3. Obtain the *Integration Key*, *Secret Key*, and *API Hostname*
+* If Directory Sync is required:
+** Setup Directory sync per the steps in https://duo.com/docs/adsync.
+** Obtain the *Integration Key, Secret Key, and API Hostname* from the directory setup. These will be used for template parameter values.
+*** Log into the Duo Admin Panel (https://admin.duosecurity.com/), and then navigate to *Users*
+*** Choose *Directory Sync*, and then *New Directory*.
+*** Choose *On-Premises Active Directory* (even if Amazon Managed AD)
+*** Input a Directory Name (needed to ID it in Duo), Input the Host IPs and port (you will put the other IP and port for 2nd DC later).
+*** Choose NTLMv2 for Authentication Type
+*** Input the Base DN per the instructions.
+*** Check any of the other settings as you wish, and Click *Add Directory.*
+*** Once the screen refreshes, scroll to the bottom and you will see the section that contains the *Integration Key, Secret Key, and API Hostname.*
+*** Leave this screen open or write down the needed items, and continue to step 12, you will need the three items mentioned above for the template input.
+* If Directory Sync is not required:
+** Click *Protect an Application* and locate the entry for *Auth API* in the applications list. Click *Protect* on the far-right to configure the application and get your *Integration Key*, *Secret Key*, and *API Hostname*. These will be used for template parameter values. See https://duo.com/docs/protecting-applications[Protecting Applications] for more information about protecting applications in Duo and additional application options.
