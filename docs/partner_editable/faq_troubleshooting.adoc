@@ -35,6 +35,7 @@ For advanced troubleshooting, perform the following:
 
     * View the Lambda function logs in CloudWatch Logs.
     * View the RADIUS proxy logs in CloudWatch Logs.
+    * View the ECS task logs in CloudWatch Logs.
 
 === View the Lambda function logs in CloudWatch Logs
 
@@ -51,4 +52,15 @@ For advanced troubleshooting, perform the following:
     * You should see one or more log streams; each stream represents logs from the Duo Authentication Proxy on each ECS tasks. Select each of the log streams, and look for possible error messages.
     * If there aren’t any log streams in the log group, the instances might not have access to the internet. 
 
+=== View the ECS task logs in CloudWatch Logs
+
+    * Look for *ECS Cluster*. Under *ECS service*, you should see two tasks with a status of *Pending* or *Running*. Choose one of the tasks, and view the logs in CloudWatch using either of these methods (as shown in <<ecs_task_cloudwatch_logs>>):
+    * Choose the top tab (*Logs*).
+    * In the *Containers* section, choose *View logs in CloudWatch*.
+//TODO Dave, What should we look for in the logs; why do we do this step?
+
+[#ecs_task_cloudwatch_logs]
+[link=images/duo_ecs_service_task_logs.png]
+.Access to an ECS task's CloudWatch logs
+image::../images/duo_ecs_service_task_logs.png[75%]
 
