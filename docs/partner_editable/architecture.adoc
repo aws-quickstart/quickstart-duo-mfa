@@ -18,15 +18,16 @@ internet access for resources in the private subnets.*
 ** Fargate containers for Duo Authentication Proxy in an Auto Scaling group to allow for scaling workloads up or down, as determined by Amazon CloudWatch CPU and memory alarms. 
 * In the CI/CD pipeline:
 ** AWS CodePipeline to start a pipeline as initiated by a CloudWatch time-based event. CodePipeline retrieves a container from AWS CodeCommit, builds the container with AWS CodeBuild, and pushes the image to Amazon Elastic Container Registry (Amazon ECR). A CloudWatch scheduled-event trigger rebuilds the ECR image and scans the newly built container.
-* AWS Secrets Manager to rotate secrets regularly. 
+* An AWS Directory Service managed directory to store the updated IP addresses of Fargate containers when the containers are stabilized.
+* An AWS Key Management Service (AWS KMS) key to encrypt all Duo AuthProxy related resources.
+* AWS Secrets Manager to store and rotate secrets regularly.
+* AWS Systems Manager Parameter Store to store Fargate container IP addresses.
+* A CloudWatch event-based event to trigger the build for DuoAuthProxy ECR when the CodeCommit branch is updated. 
 * A Lambda function to replace the Fargate containers when secrets are rotated.
-* AWS Key Management Service (AWS KMS) to [do what? ____].
-* An AWS Directory Service managed directory to store the updated the IP addresses of Fargate containers when the containers are stabilized. 
-* A CloudWatch event-based event to [do what? ____ Describe the second one] 
-* A Lambda function to [do what? ____ Describe the second one]
-* AWS Systems Manager Parameter Store to store Fargate container IP addresses. 
-* A CloudWatch event-based event to [do what? ____ Describe the third one] 
-* A Lambda function to [do what? ____ Describe the third one]
+* A CloudWatch event-based event triggered by the replaced Fargate containers.
+* A Lambda function to update the Duo MFA settings in Systems Manager Parameter Store.
+* CloudWatch CPU and memory alarms.
+* A Lambda function to gather the event stream from CodePipeline.
 * Simple Notification Service (Amazon SNS) to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
