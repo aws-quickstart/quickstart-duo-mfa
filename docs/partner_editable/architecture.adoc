@@ -21,14 +21,14 @@ internet access for resources in the private subnets.*
 * An AWS Directory Service managed directory to store the updated IP addresses of Fargate containers when the containers are stabilized.
 * An AWS Key Management Service (AWS KMS) key to encrypt all Duo AuthProxy related resources.
 * AWS Secrets Manager to store and rotate secrets regularly.
-* AWS Systems Manager Parameter Store to store Fargate container IP addresses.
-* A CloudWatch event-based event to trigger the build for DuoAuthProxy ECR when the CodeCommit branch is updated. 
+* AWS Systems Manager Parameter Store to store Fargate container IP addresses. 
 * A Lambda function to replace the Fargate containers when secrets are rotated.
-* A CloudWatch event-based event triggered by the replaced Fargate containers.
-* A Lambda function to update the Duo MFA settings in Systems Manager Parameter Store.
+* A CloudWatch event-based event triggered when the updated Fargate containers are stabilized.
+* A Lambda function triggered by the above CloudWatch event to update the Duo MFA settings in Systems Manager Parameter Store.
+* A CloudWatch event-based event triggered when the Duo MFA settings are updated in Systems Manager Parameter Store.
+* A Lambda function triggered by the above event to either update the RADIUS settings in AWS Directory Service or trigger a Simple Notification Service (SNS) notification if the update dails.
 * CloudWatch CPU and memory alarms.
-* A Lambda function to gather the event stream from CodePipeline.
-* Simple Notification Service (Amazon SNS) to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails.
+* SNS notifications to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
 
