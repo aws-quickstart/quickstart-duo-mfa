@@ -5,14 +5,14 @@
 // Space needed to maintain table headers
 |VPCs |1
 |Security groups |1
-|AWS Identity and Access Management (IAM) roles |10
-|Key Management Service (KMS) keys |1
-|AWS Managed Directories |1
+|IAM roles |10
+|AWS KMS keys |1
+|AWS Directory Service managed directory |1
 |AWS Secrets Manager secrets |1
 |Lambda functions |3
 |CodePipeline pipelines |1
 |CodeCommit repositories |1
-|Simple Notification Service (SNS) topics |2
+|SNS topics |2
 |CloudWatch alarms |2
-|Amazon Elastic Container Registry (ECR) images |1
+|ECR images |1
 |===

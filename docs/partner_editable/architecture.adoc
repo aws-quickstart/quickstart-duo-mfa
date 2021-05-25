@@ -1,12 +1,10 @@
 Deploying this Quick Start for a new virtual private cloud (VPC) with
-default parameters builds the following {partner-product-short-name} environment in the
-AWS Cloud.
+default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
 
-// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/architecture_diagram.png[Architecture,width=100%,height=100%]
+image::../images/duo-mfa-architecture_diagram.png[Architecture]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
@@ -17,17 +15,20 @@ best practices, to provide you with your own virtual network on AWS.*
 ** Managed network address translation (NAT) gateways to allow outbound
 internet access for resources in the private subnets.*
 * In the private subnets:
-** Fargate containers for Duo Authentication Proxy with autoscaling to allow for scaling of workloads.
-*** CloudWatch CPU and memory alarms are used to determine when to scale up or down.
-* An AWS Directory Service managed directory.*
-* A scheduled event trigger rebuilds the ECR image and scans the newly built container.
-** Trigger starts a CodePipeline.
-** CodePipeline retrieves the container from CodeCommit, builds the container with CodeBuild, and pushes the image to ECR.
-* Secrets Manager is used to rotate secrets regularly. 
-** When secrets are rotated a Lambda function replaces the Fargate containers
-** Fargate containers, when stabilized, update their IP addresses in AWS Directory Service.
-*** Fargate container IP addresses are stored in Systems Manager Parameter Store
-* SNS notifications notify the administrator when the Fargate containers scale or, a new container is built, or a container build fails.
-
+** Fargate containers for Duo Authentication Proxy in an Auto Scaling group to allow for scaling workloads up or down, as determined by Amazon CloudWatch CPU and memory alarms. 
+* In the CI/CD pipeline:
+** AWS CodePipeline to start a pipeline as initiated by a CloudWatch time-based event. CodePipeline retrieves a container from AWS CodeCommit, builds the container with AWS CodeBuild, and pushes the image to Amazon Elastic Container Registry (Amazon ECR). A CloudWatch scheduled-event trigger rebuilds the ECR image and scans the newly built container.
+* AWS Secrets Manager to rotate secrets regularly. 
+* A Lambda function to replace the Fargate containers when secrets are rotated.
+* AWS Key Management Service (AWS KMS) to [do what? ____].
+* An AWS Directory Service managed directory to store the updated the IP addresses of Fargate containers when the containers are stabilized. 
+* A CloudWatch event-based event to [do what? ____ Describe the second one] 
+* A Lambda function to [do what? ____ Describe the second one]
+* AWS Systems Manager Parameter Store to store Fargate container IP addresses. 
+* A CloudWatch event-based event to [do what? ____ Describe the third one] 
+* A Lambda function to [do what? ____ Describe the third one]
+* Simple Notification Service (Amazon SNS) to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails.
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+
+//TODO Dave, I've streamlined the architecture diagram and reorganized the bullets to follow the arrows. It's incomplete and incorrect in places. Please fix what's wrong and fill in what's missing.
