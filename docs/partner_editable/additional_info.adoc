@@ -9,10 +9,10 @@ After you launch the stack, verify your deployment and, if desired, modify your 
 
 === Verify your deployment
 
-. Verify that the ECS cluster contains the number of instances that you want. 
+. Verify that the Amazon ECS cluster contains the number of instances that you want. 
 .. Open the Amazon ECS console.
 .. In the left pane, choose *Clusters*.
-.. Choose the *ECS Instances* tab.  
+.. Choose the *ECS Instances* tab.
 . Verify the MFA configuration. 
 .. Open the Directory Service console.
 .. Select your directory.
@@ -23,10 +23,11 @@ After you launch the stack, verify your deployment and, if desired, modify your 
 . Verify that MFA is working in an Amazon WorkSpaces client.
 .. Open the Amazon WorkSpaces client.
 .. Use the registration code from your registered ADC that you used for the Duo setup earlier. 
+//TODO Dave, What is "ADC"?
 .. Under the username and password boxes, in the third text box, enter the MFA code from the Duo Mobile app or the hardware security token mentioned earlier.
 . If you chose directory synchronization earlier, synchronize users to Duo Cloud, and add hardware tokens.
 .. Open the Duo administrator panel. Choose *Users* on the left side of screen, and choose *Directory Sync* near the top right. 
-.. Enter the NTLM (Active Directory) domain and the NTLM workstation: the hostname of one of the Duo Radius ECS IP addresses (example: 10.0.10.10, 10.0.11.10).
+.. Enter the NTLM (Active Directory) domain and the NTLM workstation: the hostname of one of the Duo RADIUS ECS IP addresses (example: 10.0.10.10, 10.0.11.10).
 .. At the bottom of the page, choose *Refresh*. This brings you to the top of the page, which instructs you to select a group to import.
 .. At the bottom of the page, for *Groups*, enter the Active Directory user group you want to import into Duo. Choose *Save Groups*.
 .. At the top of the page, select *Sync Now*.
@@ -39,18 +40,22 @@ After you launch the stack, verify your deployment and, if desired, modify your 
 
 === Modify your implementation
 
-If you want to increase or decrease the number of RADIUS tasks after implementing the solution, update the CloudFormation stack and specify the desired number of servers, then perform a stack update. If you increase the number of tasks, the ECS service starts up that number of new tasks and installs and configures the Duo Authentication Proxy service for each. 
+If you want to increase or decrease the number of RADIUS tasks after deploying the Quick Start, update the AWS CloudFormation stack and specify the desired number of servers. Then perform a stack update. If you increase the number of tasks, the Amazon ECS service starts up that number of new tasks and installs and configures the Duo Authentication Proxy service for each. 
 
 :xrefstyle: short
 [#duo_ecs_service_stable]
-.ECS service stable
+.Amazon ECS service, steady state
 [link=images/duo_ecs_service_stable.png]
-image::../images/duo_ecs_service_stable.png[Architecture,width=75%,height=75%]
+image::../images/duo_ecs_service_stable.png[Amazon ECS service stable,85%]
 
-After each task is configured, the ECS service triggers an event notifying that the service has reached a steady state, as shown in <<duo_ecs_service_stable>>.
+After each task is configured, the Amazon ECS service invokes an event that sends a notification that the service has reached a steady state, as shown in <<duo_ecs_service_stable>>.
  
-That CloudWatch event triggers a Lambda function that finds the IP address of the Fargate task and updates the SSM parameter *DuoServiceIps*, which triggers another event that updates the Directory Service MFA. The whole process takes 2-3 minutes.
- 
-Application Autoscaling in the ECS service automatically scales the ECS tasks when CPU or memory limits are reached. This allows for handling spikes in traffic, such as early morning logins. Likewise, when the ECS service does not see much activity Application Autoscaling decreases the number of tasks, and then triggers the preceding workflow to get IP addresses from Lambda functions and update the Directory Service RADIUS configuration.
+That CloudWatch event initiates a Lambda function that finds the IP address of the Fargate task and updates the SSM parameter `DuoServiceIps`. This updated parameter initiates another event, which updates the Directory Service MFA. The whole process takes two to three minutes.
 
-Stand up a regular trigger on a pipeline to get the latest code and build it. By default, the trigger frequency is set to weekly. This frequency can be changed with an AWS CloudFormation parameter when you create or update the stack. When the secrets are rotated, the newest image is automatically pulled and deployed. ECR is configured to scan on push; CodeBuild jobs can wait for the results of the scan before completing. If the build or scan fails, Duo administrators are notified.
+//TODO Dave, What's "SSM"?
+ 
+Application Auto Scaling in the Amazon ECS service automatically scales the Amazon ECS tasks when CPU or memory limits are reached. Scaling accommodates spikes in traffic, such as early morning logins. Likewise, when the Amazon ECS service does not see much activity, Application Auto Scaling decreases the number of tasks and then initiates the preceding workflow to get IP addresses from Lambda functions and update the Directory Service RADIUS configuration.
+
+Set a regular scheduled event on a pipeline to get the latest code and build it. By default, the event frequency is set to weekly. This frequency can be changed with an AWS CloudFormation parameter when you create or update the stack. When the secrets are rotated, the newest image is automatically pulled and deployed. ECR is configured to scan on push; CodeBuild jobs can wait for the results of the scan before completing. If the build or scan fails, Duo administrators are notified.
+
+//TODO Dave, Which chunks of this section are specific to modifying the implementation, and which belong earlier in the general description (maybe under "Architecture")?

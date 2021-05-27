@@ -3,17 +3,17 @@
 # AWS Customer Agreement - https://aws.amazon.com/agreement
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
-  Configures Duo RADIUS ECS services using Fargate for use in directory service MFA (can be used
+  Configures Duo RADIUS ECS services using Fargate for use in Directory Service MFA (can be used
   for AWS SSO, WorkSpaces, and other SAML service providers)
 
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Launch into an existing VPC"
+    EntrypointName: "Parameters for deploying into an existing VPC"
     Order: "2"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-            default: Duo Account settings
+            default: Duo account settings
         Parameters:
           - DuoIntegrationKey
           - DuoSecretKey
@@ -37,24 +37,24 @@ Metadata:
           - adReadOnlyUser
           - adReadOnlyPassword
       - Label:
-            default: Duo Authentication Proxy ECR Configuration
+            default: Duo Authentication Proxy ECR configuration
         Parameters:
           - EcrImageRetention
           - EcrRepoName
           
       - Label:
-            default: CodeCommit Configuration
+            default: CodeCommit configuration
         Parameters:
           - CodeCommitRepoName
           - CodeCommitBranchName
           # - CodeCommitS3Bucket
           # - CodeCommitS3BucketKey
       - Label:
-            default: CodePipeline Configuration
+            default: CodePipeline configuration
         Parameters:
           - EcrCronExpression
       - Label:
-            default: KMS Configuration
+            default: AWS KMS configuration
         Parameters:
           - AdminArn
       - Label:
@@ -65,45 +65,45 @@ Metadata:
           - QSS3KeyPrefix
     ParameterLabels:
         AdminArn:
-          default: KMS Admin Role
+          default: AWS KMS administrator role ARN
         # CodeCommitS3Bucket:
         #   default: CodeCommit S3 Bucket
         # CodeCommitS3BucketKey:
         #   default: CodeCommit S3 Bucket Key
         EcrRepoName:
-          default: ECR Repo Name
+          default: ECR repo name
         EcrImageRetention:
-          default: ECR Retention Period
+          default: ECR retention period
         CodeCommitRepoName:
-          default: CodeCommit Repo Name
+          default: CodeCommit repo name
         CodeCommitBranchName:
-          default: CodeCommit Branch Name
+          default: CodeCommit branch name
         EcrCronExpression:
-          default: ECR Rebuild Cron
+          default: ECR rebuild cron expression
         NotificationEmail:
-          default: Duo Administrator Email
+          default: Duo administrator email
         DuoMaxCapacity:
-          default: Duo Maximum Tasks
+          default: Duo maximum tasks
         AdSync:
-          default: Sync AD
+          default: Sync Active Directory
         adReadOnlyUser:
-          default: AD Read Only User
+          default: Active Directory read-only user
         adReadOnlyPassword:
-          default: AD Read Only Password
+          default: Active Directory read-only password
         DirectoryIntegrationKey:
-          default: Duo Directory integration key
+          default: Duo directory integration key
         DirectorySecretKey:
-          default: Duo Directory secret key
+          default: Duo directory secret key
         DuoIntegrationKey:
           default: Duo integration key
         DuoSecretKey:
           default: Duo secret key
         DuoApiHostName:
-          default: Duo hostname
+          default: Duo API hostname
         DirectoryServiceId:
-          default: Directory service ID
+          default: Directory Service ID
         RadiusProxyServerCount:
-          default: RADIUS servers
+          default: RADIUS proxy server count
         RadiusPortNumber:
           default: RADIUS port number
         DuoFailMode:
@@ -111,7 +111,7 @@ Metadata:
         QSS3BucketName:
           default: Quick Start S3 bucket name
         QSS3BucketRegion:
-          default: Quick Start S3 bucket region
+          default: Quick Start S3 bucket Region
         QSS3KeyPrefix:
           default: Quick Start S3 key prefix
 #-----------------------------------------------------------
@@ -122,7 +122,7 @@ Parameters:
 
   AdminArn:
     Type: String
-    Description: IAM Arn that will have admin rights to the KMS key. If left empty, KMS Key Policy will not have an admin role to administer it.
+    Description: IAM Amazon Resource Name that has administrator rights to the AWS KMS key. If you keep this box blank, KMS key policy will not have an administrator role to administer it.
     Default: ''
 
   # CodeCommitS3Bucket:
@@ -140,41 +140,41 @@ Parameters:
     
   EcrRepoName:
     Type: String
-    Description: Duo Authentication Proxy ECR repo name
+    Description: Name of the Duo Authentication proxy ECR repo.
     Default: duo-authproxy
     AllowedPattern: "(?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*"
     MinLength: 2
     MaxLength: 256
   EcrImageRetention:
     Type: Number
-    Description: Number of days to retain the ECR image
+    Description: Number of days to retain the ECR image.
     ConstraintDescription: 'Must be in the range [30-600].'
     Default: 30
     MinValue: 30
     MaxValue: 600
   CodeCommitRepoName:
     Type: String
-    Description: CodeCommit Repo Name which will manage all the code base
+    Description: Name of the CodeCommit repo that which will manage all the code base.
     Default: duo-authproxy
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
   CodeCommitBranchName: 
     Type: String
-    Description: CodeCommit Branch name where all the code base is located. This will act as a trigger to CodePipeline.
+    Description: Name of the CodeCommit branch where all the code base is located. This branch starts actions in CodePipeline.
     Default: ecr
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
   EcrCronExpression:
     Type: String
-    Description: Cron expression trigger at 0000 UTC every Saturday based on https://docs.aws.amazon.com/eventbridge/latest/userguide/scheduled-events.html 
+    Description: Cron expression trigger. By default, it's set at 0000 UTC every Saturday. See https://docs.aws.amazon.com/eventbridge/latest/userguide/scheduled-events.html. 
     Default: '0 0 ? * SAT *'
   NotificationEmail:
     Type: String
-    Description: Email of Duo Administrators to notify when pipeline fails or update to Directory fails
+    Description: Email address of Duo administrators to notify when the pipeline fails or when an update to the directory fails.
     AllowedPattern: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
     ConstraintDescription: Provide a valid email address.
 
   AdSync:
     Type: String
-    Description: Choose whether AD sync is required or not
+    Description: If Active Directory synchronization is not required, choose "no."
     Default: 'yes'
     AllowedValues:
       - 'yes'
@@ -183,45 +183,45 @@ Parameters:
   adReadOnlyUser:
     Type: String
     Description: >
-      AD UserName with Read-Only to the Directory for Duo Directory Sync configuration
+      Name of Active Directory user with read-only access to the directory for Duo's Directory Sync configuration.
     Default: ''
 
   adReadOnlyPassword:
     Type: String
     NoEcho: true
     Description: >
-      AD UserName Password with Read-Only to the Directory for Duo Directory Sync configuration
+      Password for Active Directory user with read-only access to the directory for Duo's Directory Sync configuration.
     Default:  ''
   
   DirectoryIntegrationKey:
     Type: String
     Description: >
-      Integration key retrieved from Duo Directory Sync configuration
+      Integration key retrieved from Duo's Directory Sync configuration.
     Default:  ''
 
   DirectorySecretKey:
     Type: String
     NoEcho: true
     Description: >
-      Secret key retrieved from Duo Directory Sync configuration
+      Secret key retrieved from Duo's Directory Sync configuration.
     Default:  ''
 
   DuoIntegrationKey:
     Type: String
     Description: >
-      Integration key retrieved from Duo RADIUS application configuration
+      Integration key retrieved from the Duo RADIUS application configuration.
     
 
   DuoSecretKey:
     Type: String
     NoEcho: true
     Description: >
-      Secret key retrieved from Duo RADIUS application configuration
+      Secret key retrieved from the Duo RADIUS application configuration.
 
   DuoApiHostName:
     Type: String
     Description: >
-      API host name retrieved from Duo RADIUS application configuration
+      API hostname retrieved from the Duo RADIUS application configuration.
 #    AllowedPattern: ^api\-[a-zA-Z0-9]*.duofederal.com$
 #    ConstraintDescription: >
 #      API hostname must match pattern api-12345678.duosecurity.com
@@ -229,10 +229,10 @@ Parameters:
   DirectoryServiceId:
     Type: String
     Description: >
-      ID of existing directory service (d-xxxxxxxxxx)
+      ID of existing Directory Service (d-xxxxxxxxxx).
     AllowedPattern: ^d\-[a-zA-Z0-9]{10,}$
     ConstraintDescription: >
-      Directory Service Id must match pattern d-0123456789
+      Directory Service ID must match the pattern d-0123456789.
 
   RadiusProxyServerCount:
     Type: Number
@@ -243,12 +243,12 @@ Parameters:
       - 3
       - 4
     Description: >
-      The number of RADIUS proxy Fargate servers to create.
+      Number of RADIUS proxy Fargate servers to create.
 
   RadiusPortNumber:
     Type: Number
     Description: >
-      Port on which to listen for incoming RADIUS access requests
+      Port on which to listen for incoming RADIUS access requests.
     Default: 1812
     ConstraintDescription: 'Must be in the range [1150-65535].'
     MinValue: 1150
@@ -257,8 +257,8 @@ Parameters:
   DuoFailMode:
     Type: String
     Description: >
-      Once primary authentication succeeds, Safe mode allows authentication attempts,
-      if the Duo service cannot be contacted. Secure mode rejects authentication attempts,
+      After primary authentication succeeds, safe mode allows authentication attempts
+      if the Duo service cannot be contacted. Secure mode rejects authentication attempts
       if the Duo service cannot be contacted.
     AllowedValues:
       - "safe"
@@ -268,7 +268,7 @@ Parameters:
   DuoMaxCapacity:
     Type: String
     Description: >
-      Maximum number of tasks that can be launched by ECS Application AutoScaling
+      Maximum number of tasks that can be launched by ECS Application Auto Scaling.
     Default: 4
     AllowedValues:
       - 4
@@ -280,26 +280,38 @@ Parameters:
       - 10
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
-    ConstraintDescription: Can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
-      (-).
+    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
+      hyphen (-).
     Default: aws-quickstart
-    Description: S3 bucket name for the Quick Start assets. This name
-      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
-      It cannot start or end with a hyphen (-).
+    Description: Name of the S3 bucket for your copy of the Quick Start assets. 
+      Keep the default name unless you are customizing the template. 
+      Changing the name updates code references to point to a new Quick 
+      Start location. This name can include numbers, lowercase letters, 
+      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
+      See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
-    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is 
+    hosted. Keep the default Region unless you are customizing the template. 
+    Changing this Region updates code references to point to a new Quick Start location. 
+    When using your own bucket, specify the Region. 
+    See https://aws-quickstart.github.io/option1.html.'
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
-    ConstraintDescription: Can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slash (/).
+    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slashes (/). The prefix should
+      end with a forward slash (/).
     Default: quickstart-duo-mfa/
-    Description: S3 key prefix for the Quick Start assets. This prefix
-      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
-      forward slash (/).
+    Description: S3 key prefix that is used to simulate a directory for your copy of the 
+      Quick Start assets. Keep the default prefix unless you are customizing 
+      the template. Changing this prefix updates code references to point to 
+      a new Quick Start location. This prefix can include numbers, lowercase 
+      letters, uppercase letters, hyphens (-), and forward slashes (/). End with 
+      a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+      and https://aws-quickstart.github.io/option1.html.
     Type: String
 #-----------------------------------------------------------
 # Conditions
@@ -349,7 +361,7 @@ Resources:
   GetDirectoryServiceFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Description: Look up directory service
+      Description: Look up Directory Service
       Handler: index.lambda_handler
       KmsKeyArn: !GetAtt DuoKmsKey.Arn
       Role: !GetAtt GetDirectoryServiceMfaSettingsRole.Arn
@@ -415,7 +427,7 @@ Resources:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub DuoConfigurationSettings-${DirectoryServiceId}
-      Description: Duo Configuration Settings
+      Description: Duo configuration settings
       KmsKeyId: !GetAtt DuoKmsKey.Arn
       GenerateSecretString:
         SecretStringTemplate: !Sub |
@@ -593,7 +605,7 @@ Resources:
         FromPort: !Ref RadiusPortNumber
         ToPort: !Ref RadiusPortNumber
         SourceSecurityGroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
-        Description: Allows UDP from Directory Service Domain Controllers
+        Description: Allows UDP from Directory Service domain controllers
       SecurityGroupEgress:
       - IpProtocol: "-1"
         FromPort: 0
@@ -897,7 +909,7 @@ Resources:
 
   #--------------------------------------------------
   # IAM role used by the Lambda function to update the
-  # directory service MFA settings.
+  # Directory Service MFA settings.
   #--------------------------------------------------
   UpdateDirectoryServiceMfaSettingsRole:
     Type: AWS::IAM::Role
@@ -955,7 +967,7 @@ Resources:
   UpdateDirectoryServiceMfaSettings:
     Type: AWS::Lambda::Function
     Properties:
-      Description: Update the directory service MFA settings
+      Description: Update the Directory Service MFA settings.
       Handler: index.lambda_handler
       KmsKeyArn: !GetAtt DuoKmsKey.Arn
       Role: !GetAtt UpdateDirectoryServiceMfaSettingsRole.Arn
@@ -1095,7 +1107,7 @@ Resources:
               return rs
 
   #--------------------------------------------------
-  # Create an application autoscaling scalable target
+  # Create an Application Auto Scaling scalable target
   # for Duo ECS service
   #--------------------------------------------------
   DuoEcsScalableTarget:
@@ -1112,7 +1124,7 @@ Resources:
       ServiceNamespace: ecs
 
   #--------------------------------------------------
-  # Create an application autoscaling policy
+  # Create an Application Auto Scaling policy
   # for Duo ECS service based on CPU
   #--------------------------------------------------
   DuoServiceScalingPolicyCpu:
@@ -1129,7 +1141,7 @@ Resources:
           PredefinedMetricType: ECSServiceAverageCPUUtilization
   
   #--------------------------------------------------
-  # Create an application autoscaling policy
+  # Create an Application Auto Scaling policy
   # for Duo ECS service based on Memory (RAM)
   #--------------------------------------------------
   DuoServiceScalingPolicyMem:
@@ -2004,10 +2016,10 @@ Outputs:
     Description: SSM parameter store for Fargate IPs
   DuoServiceScalingPolicyCpu:
     Value: !Ref DuoServiceScalingPolicyCpu
-    Description: Duo ECS Service Application Autoscaling for CPU
+    Description: Duo ECS service Application Auto Scaling for CPU
   DuoServiceScalingPolicyMem:
     Value: !Ref DuoServiceScalingPolicyMem
-    Description: Duo ECS Service Application Autoscaling for Memory
+    Description: Duo ECS service Application Auto Scaling for memory
   DuoServiceSg:
     Value: !Ref DuoServiceSg
     Description: EC2 Security group for Duo Fargate Service
@@ -2077,3 +2089,7 @@ Outputs:
   UpdateDirectoryServiceMfaSettingsRole:
     Value: !Ref UpdateDirectoryServiceMfaSettingsRole
     Description: IAM role to allow update MFA of Directory
+  Postdeployment:
+    Value: https://aws-quickstart.github.io/quickstart-duo-mfa/
+    Description: See the deployment guide for post-deployment steps.
+ 
