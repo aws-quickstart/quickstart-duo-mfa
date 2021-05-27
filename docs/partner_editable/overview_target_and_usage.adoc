@@ -11,3 +11,7 @@ This Quick Start deploys Duo using the https://aws.amazon.com/fargate/[AWS Farga
 NOTE: {compliance-statement}
 
 //TODO Dave, "Master" shows up in a couple of the code files. Are those references changing?
+
+//TODO Dave, Are the title, overview, and description as they should be?
+
+//TODO Dave, Can this wait until I return? (I've asked Tad to give it a legal review anyhow.)

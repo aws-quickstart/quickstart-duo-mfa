@@ -18,12 +18,13 @@ internet access for resources in the private subnets.*
 * In the VPC [or is it in the private subnets?], Fargate containers for Duo Authentication Proxy in a [security?] group scale workloads up or down, as determined by Amazon CloudWatch CPU and memory alarms.
 //TODO Dave, Since the Auto Scaling group is no longer in the diagram, what's accurate to say about auto scaling? 
 //TODO Dave, was the original dotted-line box around Fargate meant to be a security group? Presuming so, what to say about it (in the Fargate bullet)?
-//TODO Dave, Should we show (or label) "containers" in the diagram, or does the Fargate icon itself represent them?
-* A CI/CD pipeline that works as follows: In response to an CloudWatch scheduled event, AWS CodePipeline retrieves a container from AWS CodeCommit. Next, CodePipeline builds the container with AWS CodeBuild. Finally, CodePipeline pushes the image to Amazon Elastic Container Registry (Amazon ECR). 
-//TODO Dave, Is this pipeline description (& depiction in the diagram) accurate?
+//TODO Dave, I've added a container-image icon, Amazon ECS icon, and "Image discovery" box. How to describe them accurately? Inspired by this diagram: https://aws.amazon.com/solutions/implementations/aws-perspective/#
+//TODO Dave, Should Fargate, ECS, and ECR icons be in a private subnet?
+* A CI/CD pipeline that works as follows: In response to an CloudWatch scheduled event, AWS CodePipeline retrieves a container from AWS CodeCommit. Next, CodePipeline builds the container with AWS CodeBuild. Finally, CodePipeline pushes the [container?] image to Amazon Elastic Container Registry (Amazon ECR). 
+//TODO Dave, I changed this box label to "Image deployment"; okay? Still a CI/CD pipeline? How to accurately describe the flow here (& arrows)?
 //TODO Dave, What kind of "scheduled event" are we talking about?
-* Amazon ECR to rebuild the ECR image [?].
-//TODO Dave, How to describe ECR, incl. the arrow from ECR to Fargate?
+* Amazon ECR to rebuild the ECR [container?] image [____?].
+//TODO Dave, How to describe accurately describe ECR?
 * An Amazon Simple Notification Service (Amazon SNS) topic to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails. These notifications are invoked by CloudWatch CPU and memory alarms.
 //TODO Dave, Is the previous bullet accurate?
 * Secrets and events management:
