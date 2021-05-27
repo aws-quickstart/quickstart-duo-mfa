@@ -39,16 +39,7 @@ Each deployment takes about {deployment_time} to complete.
 |===
 
 . Check the AWS Region that's displayed in the upper-right corner of the navigation bar, and change it if necessary. This Region is where the network infrastructure for {partner-product-short-name} is built. The template is launched in the {default_deployment_region} Region by default.
-+
-// *Note:* This deployment includes Amazon EFS, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see the https://docs.aws.amazon.com/general/latest/gr/elasticfilesystem.html[endpoints and quotas webpage].
-// . Update Directory Controller Security Group
-//     * Ensure the existing security group associated with your domain controllers allow User Datagram Protocol (UDP) port 1812 (by default or specify the port) egress (Outbound) to their own subnet CIDR range (or the entire VPC).
-// . Upload Duo Zip File to S3
-//     * Either create a new S3 bucket or use an existing CloudFormation template bucket.
-//     * Unzip the delivered Duo zip file, and upload the quickstart-duo-mfa folder to the S3 bucket.
-//     * Make note of the S3 bucket name and folder prefix, this will be used in the parameters of the CloudFormation template below.
-
-//TODO Dave, Are these Duo-related comments above useful to keep in this file? Or can we delete them?
 
 . On the *Create stack* page, keep the default setting for the template URL, and then choose *Next*.
+
 . On the *Specify stack details* page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. For details on each parameter, see the link:#_parameter_reference[Parameter reference] section of this guide. When you finish reviewing and customizing the parameters, choose *Next*.
