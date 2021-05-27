@@ -1,11 +1,11 @@
 // Change the following attributes.
 :quickstart-project-name: quickstart-duo-mfa
-:partner-product-name: Duo MFA for AWS Directory Service 
+:partner-product-name: CMMC-Ready Duo MFA for AWS Directory Service 
 // For the following attribute, if you have no short name, enter the same name as partner-product-name.
 :partner-product-short-name: Duo MFA
 // If there's no partner, comment partner-company-name and partner-contributors.
 :partner-company-name: Duo Security
-:doc-month: May
+:doc-month: June
 :doc-year: 2021
 // For the following two "contributor" attributes, if the partner agrees to include names in the byline, 
 // enter names for both partner-contributors and quickstart-contributors. 
@@ -26,3 +26,4 @@
 // Additional content will be generated automatically based on these attributes.
 // :marketplace_subscription:
 // :marketplace_listing_url: https://example.com/
+:compliance-statement: Deploying this Quick Start does not guarantee an organization’s compliance with any laws, certifications, policies, or other regulations.

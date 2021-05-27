@@ -19,8 +19,8 @@ This Quick Start supports the following Regions:
 * eu-north-1 (Stockholm)
 * me-south-1 (Bahrain)
 * sa-east-1 (São Paulo)
-* us-gov-east-1 (GovCloud)
-* us-gov-west-1 (GovCloud)
+* us-gov-east-1, AWS GovCloud (US-East)
+* us-gov-west-1, AWS GovCloud (US-West)
 
 
 //Full list: https://docs.aws.amazon.com/general/latest/gr/rande.html

@@ -1,6 +1,6 @@
 ==== Prepare your Duo account
 
-. If you don't already have a Duo account, https://signup.duo.com/[sign up for one].
+. If you don't already have a Duo account, https://signup.duo.com/[sign up for one^].
 . Log in to the Duo administrator panel.
 * Accounts other than federal: https://admin.duosecurity.com/login[https://admin.duosecurity.com/login^] 
 * Federal accounts: https://admin.duofederal.com[https://admin.duofederal.com^]
@@ -11,10 +11,13 @@
 .. In the applications list, locate the entry for *Auth API*. On the far right, choose *Protect*.
 .. Configure the application, and get your integration key, secret key, and API hostname. Write down these three items. For details, see https://duo.com/docs/protecting-applications[Protecting Applications^]. 
 * If directory synchronization is required, do the following:
-.. Set up directory sync by following the steps in https://duo.com/docs/adsync[Synchronizing Users from Active Directory^].
+.. Set up directory synchronization by following the steps in https://duo.com/docs/adsync[Synchronizing Users from Active Directory^].
 .. From the Duo administrator panel, choose *Users*. Then choose *Directory Sync*, *New Directory*, *On-Premises Active Directory* (even if AWS Managed Microsoft AD).
 .. Enter a directory name (needed to identify the directory in Duo), the host IPs, and the port. (You will enter the other IP and port for the second DC later).
+//TODO Dave, What is "DC"?
+//TODO Dave, Instead of "later," please insert a cross ref to the relevant section.
 .. For *Authentication Type*, choose *NTLMv2*. Enter the base DN, following the instructions.
+//TODO Dave, Does "DN" stand for directory name? domain name?
 .. If needed, change other settings.
 .. Choose *Add Directory.*
 .. After the screen refreshes, scroll to the bottom, where the integration key, secret key, and API hostname appear. Write down these three items.
