@@ -3,7 +3,7 @@
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
 *A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack's state is retained, and the instance keeps running so that you can troubleshoot the issue. (For Windows, look at the log files in `%ProgramFiles%\Amazon\EC2ConfigService` and `C:\cfn\log`.)
-// Customize this answer if needed. For example, if you’re deploying on Linux instances, either provide the location for log files on Linux or omit the final sentence. If the Quick Start has no EC2 instances, revise accordingly (something like "and the assets keep running").
+//TODO Dave, Since we have no EC2 instances, should we delete this last sentence? And then say something like "and the assets keep running..." in the previous sentence?
 
 WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Delete the stack when you finish troubleshooting.
 
@@ -28,6 +28,8 @@ If your Directory Service's MFA status is in a *Failed* status, check the follow
 .. In the search field, enter one of the DNS IP addresses you found in the previous step.
 .. From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for User Datagram Protocol (UDP) to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the AWS CloudFormation stack output.
 
+//TODO Dave, How should we tweak the three references to EC2 in the  steps?
+
 For advanced troubleshooting, perform the following:
 
 * View the Lambda function logs in CloudWatch Logs.
@@ -51,12 +53,6 @@ For advanced troubleshooting, perform the following:
 === View the Amazon ECS task logs in CloudWatch Logs
 
 . Look for *ECS Cluster*. Under *ECS service*, you should see two tasks with a status of *Pending* or *Running*. 
-. Choose one of the tasks, and view the logs in CloudWatch using either of these methods (as shown in <<ecs_task_cloudwatch_logs>>):
+. Choose one of the tasks, and view the logs in CloudWatch using either of these methods.
 . Choose the top tab (*Logs*).
 . In the *Containers* section, choose *View logs in CloudWatch*.
-//TODO Dave, I was thinking that we talked about deleting this section, but I want to make sure. If keeping it, what should people look for in the logs; why would we do this step? Or can we delete it, incl. deleting this figure from the "images" folder?
-+
-[#ecs_task_cloudwatch_logs]
-[link=images/duo_ecs_service_task_logs.png]
-.Access to Amazon ECS task logs
-image::../images/duo_ecs_service_task_logs.png[ECS task logs,85%]

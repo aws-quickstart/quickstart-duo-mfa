@@ -9,9 +9,3 @@ This Quick Start is for those who intend to use AWS Directory Service directory 
 This Quick Start deploys Duo using the https://aws.amazon.com/fargate/[AWS Fargate^] serverless compute engine for containers. With this Quick Start, you can build an environment that's ready for compliance with https://www.acq.osd.mil/cmmc/[Cybersecurity Maturity Model Certification (CMMC)^]. Since CMMC certification is typically required of U.S. Department of Defense contractors, this Quick Start supports Duo Federal Edition.
 
 NOTE: {compliance-statement}
-
-//TODO Dave, "Master" shows up in a couple of the code files. Are those references changing?
-
-//TODO Dave, Are the title, overview, and description as they should be?
-
-//TODO Dave, Can this wait until I return? (I've asked Tad to give it a legal review anyhow.)
