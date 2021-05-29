@@ -13,31 +13,20 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 best practices, to provide you with your own virtual network on AWS.* 
 * In the public subnets, managed network address translation (NAT) gateways to allow outbound
 internet access for resources in the private subnets.*
-* In the private subnets, [____?]
-//TODO Dave, Is Fargate in them? If not, what to say for the previous bullet?
-* In the VPC [or is it in the private subnets?], Fargate containers for Duo Authentication Proxy in a [security?] group scale workloads up or down, as determined by Amazon CloudWatch CPU and memory alarms.
-//TODO Dave, Since the Auto Scaling group is no longer in the diagram, what's accurate to say about auto scaling? 
-//TODO Dave, was the original dotted-line box around Fargate meant to be a security group? Presuming so, what to say about it (in the Fargate bullet)?
-//TODO Dave, I've added a container-image icon, Amazon ECS icon, and "Image discovery" box. How to describe them accurately? Inspired by this diagram: https://aws.amazon.com/solutions/implementations/aws-perspective/#
-//TODO Dave, Should Fargate, ECS, and ECR icons be in a private subnet?
+* In the private subnets, a serverless managed AWS Fargate cluster in a security group (not shown?). These are containers for Duo Authentication Proxy. 
+//TODO Marcia to rephrase the above bullet: "scale workloads up or down, as determined by Amazon CloudWatch CPU and memory alarms"?
+//TODO Marcia: See my Slack message to Dave re: whether to show a security group box instead of generic box. 
+//TODO Marcia to recast all these bullets per 5/28 meeting with Dave.
+//TODO Marcia, Wherever Amazon Elastic Container Service (Amazon ECS) fits in (or maybe "ECS cluster," as mentioned several times later), spell it out on first use.
 * A CI/CD pipeline that works as follows: In response to an CloudWatch scheduled event, AWS CodePipeline retrieves a container from AWS CodeCommit. Next, CodePipeline builds the container with AWS CodeBuild. Finally, CodePipeline pushes the [container?] image to Amazon Elastic Container Registry (Amazon ECR). 
-//TODO Dave, I changed this box label to "Image deployment"; okay? Still a CI/CD pipeline? How to accurately describe the flow here (& arrows)?
-//TODO Dave, What kind of "scheduled event" are we talking about?
 * Amazon ECR to rebuild the ECR [container?] image [____?].
-//TODO Dave, How to describe accurately describe ECR?
 * An Amazon Simple Notification Service (Amazon SNS) topic to notify the administrator when the Fargate containers scale, when a new container is built, or when a container build fails. These notifications are invoked by CloudWatch CPU and memory alarms.
-//TODO Dave, Is the previous bullet accurate?
 * Secrets and events management:
-//TODO Dave, I'm making a guess at the group box & nested bullets. Do they make sense?
 ** AWS Secrets Manager to store and rotate secrets regularly.
 ** An AWS Lambda function to replace the Fargate containers when secrets are rotated.
 ** A second Lambda function to update the Duo MFA settings in Systems Manager Parameter Store, which stores Fargate container IP addresses. This function is initiated by a CloudWatch event when the updated Fargate containers stabilize.
 ** A third Lambda function to either update the RADIUS settings in AWS Directory Service or, if the update fails, send an Amazon SNS notification. This function is initiated by a CloudWatch event when the Duo MFA settings are updated.
-//TODO Dave, How does the SNS "topic" factor in to the previous bullet?
 ** An AWS Directory Service managed directory to store the updated IP addresses of Fargate containers when the containers are stabilized.
 * An AWS Key Management Service (AWS KMS) key to encrypt all Duo Authentication Proxy–related resources.
-//TODO Dave, Where does Amazon Elastic Container Service (Amazon ECS) fit in? We mention "the ECS cluster" several times later. (I'll spell it out on first use.)
-//TODO Dave, Do we have an Auto Scaling group? We mention it in the post-deployment steps.
-//TODO Dave, We mention in the code "Duo ECS service Application Auto Scaling" for CPU and for memory. How does that fit in?
 
 [.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#

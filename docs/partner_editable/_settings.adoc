@@ -1,6 +1,6 @@
 // Change the following attributes.
 :quickstart-project-name: quickstart-duo-mfa
-:partner-product-name: CMMC-Ready Duo MFA for AWS Directory Service 
+:partner-product-name: Duo MFA 
 // For the following attribute, if you have no short name, enter the same name as partner-product-name.
 :partner-product-short-name: Duo MFA
 // If there's no partner, comment partner-company-name and partner-contributors.
