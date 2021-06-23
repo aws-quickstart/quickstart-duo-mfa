@@ -2,8 +2,7 @@
 
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
-*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack's state is retained, and the instance keeps running so that you can troubleshoot the issue. (For Windows, look at the log files in `%ProgramFiles%\Amazon\EC2ConfigService` and `C:\cfn\log`.)
-//TODO Dave, Since we have no EC2 instances, should we delete this last sentence? And then say something like "and the assets keep running..." in the previous sentence?
+*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack's state is retained, and the assets keep running so that you can troubleshoot the issue.
 
 WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Delete the stack when you finish troubleshooting.
 
@@ -27,8 +26,6 @@ If your Directory Service's MFA status is in a *Failed* status, check the follow
 .. Open the EC2 console, and choose *Network Interfaces* link from the menu.
 .. In the search field, enter one of the DNS IP addresses you found in the previous step.
 .. From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for User Datagram Protocol (UDP) to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the AWS CloudFormation stack output.
-
-//TODO Dave, How should we tweak the three references to EC2 in the  steps?
 
 For advanced troubleshooting, perform the following:
 

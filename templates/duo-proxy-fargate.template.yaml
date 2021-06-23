@@ -2090,6 +2090,6 @@ Outputs:
     Value: !Ref UpdateDirectoryServiceMfaSettingsRole
     Description: IAM role to allow update MFA of Directory
   Postdeployment:
-    Value: https://aws-quickstart.github.io/quickstart-duo-mfa/
+    Value: https://fwd.aws/n7wKB?
     Description: See the deployment guide for post-deployment steps.
  

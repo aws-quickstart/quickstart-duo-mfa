@@ -9,11 +9,3 @@ If you're using a federation mechanism, such as AWS Single Sign-On (AWS SSO) or 
 To learn about configuring MFA manually using your on-premises RADIUS (Remote Authentication Dial-In User Service) implementation, see https://aws.amazon.com/blogs/security/how-to-enable-multi-factor-authentication-for-amazon-workspaces-and-amazon-quicksight-by-using-microsoft-ad-and-on-premises-credentials/[How to Enable Multi-Factor Authentication for AWS Services by Using AWS Microsoft AD and On-Premises Credentials^].
 
 If you don't have a RADIUS implementation, you can use this Quick Start to automate the process of provisioning a RADIUS infrastructure in AWS using the https://duo.com/docs/authproxy-reference[Duo Authentication Proxy^] as the MFA provider. Doing so provides additional security for accessing your critical resources integrated with AWS Directory Service.
-
-//TODO Marcia: From here down is the chunk we pulled up from the end of the doc. Fold this content in to this section & "Architecture."
-
-That CloudWatch event initiates a Lambda function that finds the IP address of the Fargate task and updates the Systems Manager parameter `DuoServiceIps`. This updated parameter initiates another event, which updates the Directory Service MFA. The whole process takes two to three minutes.
- 
-Application Auto Scaling in the Amazon ECS service automatically scales the Amazon ECS tasks when CPU or memory limits are reached. Scaling accommodates spikes in traffic, such as early morning logins. Likewise, when the Amazon ECS service does not see much activity, Application Auto Scaling decreases the number of tasks and then initiates the preceding workflow to get IP addresses from Lambda functions and update the Directory Service RADIUS configuration.
-
-Set a regular scheduled event on a pipeline to get the latest code and build it. By default, the event frequency is set to weekly. This frequency can be changed with an AWS CloudFormation parameter when you create or update the stack. When the secrets are rotated, the newest image is automatically pulled and deployed. ECR is configured to scan on push; CodeBuild jobs can wait for the results of the scan before completing. If the build or scan fails, Duo administrators are notified.
