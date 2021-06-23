@@ -50,8 +50,6 @@ If you want to increase or decrease the number of RADIUS tasks after deploying t
 
 After each task is configured, the Amazon ECS service invokes an event that sends a notification that the service has reached a steady state, as shown in <<duo_ecs_service_stable>>.
 
-//TODO Marcia clean this up, incl. combining the last two paragraphs.
-
 :xrefstyle: short
 [#duo_ecs_service_stable]
 .Steady state message

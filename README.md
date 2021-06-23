@@ -1,6 +1,6 @@
 ## Duo MFA for AWS Directory Service on AWS—Quick Start
 
-For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://aws-quickstart.github.io/quickstart-duo-mfa/).
+For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/JejQ7?).
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo.
 
