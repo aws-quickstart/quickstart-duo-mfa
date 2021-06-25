@@ -1,0 +1,55 @@
+== FAQ
+
+*Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
+
+*A.* If AWS CloudFormation fails to create the stack, relaunch the template with *Rollback on failure* set to *Disabled*. This setting is under *Advanced* in the AWS CloudFormation console on the *Configure stack options* page. With this setting, the stack's state is retained, and the assets keep running so that you can troubleshoot the issue.
+
+WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Delete the stack when you finish troubleshooting.
+
+For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation^].
+
+*Q.* I encountered a size-limitation error when I deployed the AWS CloudFormation templates.
+
+*A.* Launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template-size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
+
+*Q.* Fargate containers fail with the error `ResourceInitializationError: unable to pull secrets or registry auth: execution resource retrieval failed: unable to retrieve secret from asm: service call has been retried 1 time(s): failed to fetch secret`.
+
+*A.* This error occurs if a Directory Service subnet is not private on a NAT. The Fargate subnets are same as the Directory Service subnets. Change the template to allow networking for Fargate tasks. See https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-networking.html[Fargate task networking^].
+
+== Troubleshooting
+
+If your Directory Service's MFA status is in a *Failed* status, check the following:
+
+. Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start launches the RADIUS ECS tasks in the same subnet as the DNS servers in Directory Service. The subnet must have a route to the internet (typically through a NAT gateway) to install the Duo Authentication Proxy and other required tools used to configure Directory Service.
+. Ensure that the security group associated with the Directory Service DNS servers have a rule that allows output traffic on port 1812 to the security group created by this Quick Start.
+.. To find the security group associated with your DNS servers, open the Directory Service console, and note the IP addresses under *DNS address*.
+.. Open the EC2 console, and choose *Network Interfaces* link from the menu.
+.. In the search field, enter one of the DNS IP addresses you found in the previous step.
+.. From the lower pane of the console, choose *View outbound rules* and determine whether there is a rule allowing egress on port 1812 for User Datagram Protocol (UDP) to the IP address space or security group associated with your RADIUS EC2 instances. To find the security group associated with your RADIUS EC2 instances, look up *DuoRadiusProxySecurityGroup* in the AWS CloudFormation stack output.
+
+For advanced troubleshooting, perform the following:
+
+* View the Lambda function logs in CloudWatch Logs.
+* View the RADIUS proxy logs in CloudWatch Logs.
+* View the Amazon ECS task logs in CloudWatch Logs.
+
+=== View the Lambda function logs in CloudWatch Logs
+
+. Open the AWS CloudFormation console, and select the stack that was just launched.
+. Choose the *Resources* tab.
+. Look for *UpdateDirectoryServiceMfaSettingsCloudWatchLogsGroup* in the *Logical ID* column and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Lambda function that is responsible for configuring the MFA settings for Directory Service. You should see one or more log streams. 
+. Select each one, and review any error conditions. 
+
+=== View the RADIUS proxy logs in CloudWatch Logs
+
+. Open the AWS CloudFormation console, and select the stack that was just launched.
+. Choose the *Resources* tab.
+. Look for *RadiusProxyCloudWatchLogsGroup* in the *Logical ID* column, and choose the resource link in the *Physical ID* column. This opens a CloudWatch Logs log group for the Duo Authentication Proxy running on each of the RADIUS ECS tasks. You should see one or more log streams. Each stream represents logs from the Duo Authentication Proxy on each Amazon ECS task. 
+. Select each log stream, and look for error messages. If there aren't any log streams in the log group, the instances might not have access to the internet. 
+
+=== View the Amazon ECS task logs in CloudWatch Logs
+
+. Look for *ECS Cluster*. Under *ECS service*, you should see two tasks with a status of *Pending* or *Running*. 
+. Choose one of the tasks, and view the logs in CloudWatch using either of these methods.
+. Choose the top tab (*Logs*).
+. In the *Containers* section, choose *View logs in CloudWatch*.

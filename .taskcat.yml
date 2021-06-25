@@ -1,0 +1,34 @@
+project:
+  name: quickstart-duo-mfa
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+  regions:
+    - ap-northeast-1
+    - ap-south-1
+    - ap-southeast-1
+    - ca-central-1
+    - eu-central-1
+    - eu-west-1
+    - us-east-1
+    - us-east-2
+    - us-west-2
+  s3_bucket: ''
+tests:
+  duomfa:
+    parameters:
+      AvailabilityZones: $[taskcat_genaz_2]
+      DuoApiHostName: override
+      DuoIntegrationKey: override
+      DuoSecretKey: override
+      RadiusProxyServerCount: 2
+      RadiusPortNumber: 1812
+      DomainDNSName: example.com
+      DomainNetBIOSName: EXAMPLE
+      DomainAdminPassword: $[taskcat_genpass_16]
+      KeyPairName: $[taskcat_getkeypair]
+      NotificationEmail: test@test.com
+      QSS3BucketRegion: $[taskcat_current_region]
+      QSS3BucketName: $[taskcat_autobucket]
+    regions:
+      - us-east-1
+    template: templates/duo-proxy-fargate-main.template.yaml
