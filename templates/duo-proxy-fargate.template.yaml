@@ -614,6 +614,19 @@ Resources:
         Description: Allow all outbound traffic
 
   #-------------------------------------------------
+  # Create the Security Group Egress used by Directory
+  # to talk back to Duo ECS service
+  #-------------------------------------------------
+  DirectoryEgressRule:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      IpProtocol: udp
+      FromPort: !Ref RadiusPortNumber
+      ToPort: !Ref RadiusPortNumber
+      DestinationSecurityGroupId: !GetAtt DuoServiceSg.GroupId
+      GroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
+
+  #-------------------------------------------------
   # Create the CloudWatch Event Rule for 
   # Duo ECS Service
   #-------------------------------------------------
