@@ -8,6 +8,7 @@
 :template_aws_codecommit_repository:
 :template_aws_codepipeline_pipeline:
 :template_aws_ec2_securitygroup:
+:template_aws_ec2_securitygroupegress:
 :template_aws_ecr_repository:
 :template_aws_ecs_cluster:
 :template_aws_ecs_service:
