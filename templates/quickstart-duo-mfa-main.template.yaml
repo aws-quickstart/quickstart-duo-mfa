@@ -96,6 +96,10 @@ Metadata:
         default: RADIUS servers
       RadiusPortNumber:
         default: RADIUS port number
+      RadiusTimeout:
+        default: RADIUS timeout
+      RadiusRetries:
+        default: RADIUS number of retries
       DuoFailMode:
         default: Duo fail mode
       VPCCIDR:
@@ -225,6 +229,22 @@ Parameters:
     Type: String
     Description: Port on which to listen for incoming RADIUS access requests
     Default: 1812
+  RadiusTimeout:
+    Type: Number
+    Description: >
+      Timeout window (in seconds) for each RADIUS request.
+    Default: 10
+    ConstraintDescription: 'Must be in the range [10-50].'
+    MinValue: 10
+    MaxValue: 50
+  RadiusRetries:
+    Type: Number
+    Description: >
+      Total number of retries allowed for each RADIUS request.
+    Default: 3
+    ConstraintDescription: 'Must be in the range [3-10].'
+    MinValue: 3
+    MaxValue: 10
   DuoFailMode:
     Type: String
     Description: Once primary authentication succeeds, Safe mode allows authentication attempts,
@@ -391,6 +411,8 @@ Resources:
         DirectoryServiceId: !GetAtt 'ADStack.Outputs.DirectoryID'
         RadiusProxyServerCount: !Ref 'RadiusProxyServerCount'
         RadiusPortNumber: !Ref 'RadiusPortNumber'
+        RadiusTimeout: !Ref 'RadiusTimeout'
+        RadiusRetries: !Ref 'RadiusRetries'
         DuoFailMode: !Ref 'DuoFailMode'
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref QSS3BucketRegion

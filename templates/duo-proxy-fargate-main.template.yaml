@@ -34,6 +34,8 @@ Metadata:
         Parameters:
           - RadiusProxyServerCount
           - RadiusPortNumber
+          - RadiusTimeout
+          - RadiusRetries
           - DuoFailMode
           - DuoMaxCapacity
           - NotificationEmail
@@ -100,6 +102,10 @@ Metadata:
         default: RADIUS port number
       RadiusProxyServerCount:
         default: RADIUS proxy server count
+      RadiusTimeout:
+        default: RADIUS timeout
+      RadiusRetries:
+        default: RADIUS number of retries
       VPCCIDR:
         default: VPC CIDR
 Parameters:
@@ -274,6 +280,22 @@ Parameters:
       - 4
     Description: >
       Number of RADIUS proxy Fargate servers to create.
+  RadiusTimeout:
+    Type: Number
+    Description: >
+      Timeout window (in seconds) for each RADIUS request.
+    Default: 10
+    ConstraintDescription: 'Must be in the range [10-50].'
+    MinValue: 10
+    MaxValue: 50
+  RadiusRetries:
+    Type: Number
+    Description: >
+      Total number of retries allowed for each RADIUS request.
+    Default: 3
+    ConstraintDescription: 'Must be in the range [3-10].'
+    MinValue: 3
+    MaxValue: 10
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
@@ -340,6 +362,8 @@ Resources:
         NotificationEmail: !Ref 'NotificationEmail'
         RadiusProxyServerCount: !Ref 'RadiusProxyServerCount'
         RadiusPortNumber: !Ref 'RadiusPortNumber'
+        RadiusTimeout: !Ref 'RadiusTimeout'
+        RadiusRetries: !Ref 'RadiusRetries'
         DuoFailMode: !Ref 'DuoFailMode'
         QSS3BucketName: !Ref 'QSS3BucketName'
         QSS3BucketRegion: !Ref 'QSS3BucketRegion'

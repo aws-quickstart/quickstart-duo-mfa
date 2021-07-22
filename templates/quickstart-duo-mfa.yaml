@@ -31,6 +31,8 @@ Metadata:
           - LatestAmiId
           - RadiusProxyServerCount
           - RadiusPortNumber
+          - RadiusTimeout
+          - RadiusRetries
           - DuoFailMode
 
       - Label:
@@ -55,6 +57,10 @@ Metadata:
           default: RADIUS servers
         RadiusPortNumber:
           default: RADIUS port number
+        RadiusTimeout:
+          default: RADIUS timeout
+        RadiusRetries:
+          default: RADIUS retries
         DuoFailMode:
           default: Duo fail mode
         QSS3BucketName:
@@ -120,6 +126,24 @@ Parameters:
     Description: >
       Port on which to listen for incoming RADIUS access requests
     Default: 1812
+
+  RadiusTimeout:
+    Type: Number
+    Description: >
+      Timeout window (in seconds) for each RADIUS request.
+    Default: 10
+    ConstraintDescription: 'Must be in the range [10-50].'
+    MinValue: 10
+    MaxValue: 50
+
+  RadiusRetries:
+    Type: Number
+    Description: >
+      Total number of retries allowed for each RADIUS request.
+    Default: 3
+    ConstraintDescription: 'Must be in the range [3-10].'
+    MinValue: 3
+    MaxValue: 10
 
   DuoFailMode:
     Type: String
@@ -809,6 +833,8 @@ Resources:
             radius_proxy_port_number: !Ref RadiusPortNumber
             radius_shared_secret_arn: !Ref DuoConfigurationSettingsSecret
             radius_proxy_server_count: !Ref RadiusProxyServerCount
+            radius_timeout: !Ref RadiusTimeout
+            radius_retries: !Ref RadiusRetries
       Tags:
       - Key: duo:DirectoryServiceId
         Value: !Ref DirectoryServiceId

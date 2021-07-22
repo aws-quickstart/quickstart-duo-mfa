@@ -24,6 +24,8 @@ Metadata:
           - DirectoryServiceId
           - RadiusProxyServerCount
           - RadiusPortNumber
+          - RadiusTimeout
+          - RadiusRetries
           - DuoFailMode
           - DuoMaxCapacity
           - NotificationEmail
@@ -106,6 +108,10 @@ Metadata:
           default: RADIUS proxy server count
         RadiusPortNumber:
           default: RADIUS port number
+        RadiusTimeout:
+          default: RADIUS timeout
+        RadiusRetries:
+          default: RADIUS number of retries
         DuoFailMode:
           default: Duo fail mode
         QSS3BucketName:
@@ -253,6 +259,24 @@ Parameters:
     ConstraintDescription: 'Must be in the range [1150-65535].'
     MinValue: 1150
     MaxValue: 65535
+
+  RadiusTimeout:
+    Type: Number
+    Description: >
+      Timeout window (in seconds) for each RADIUS request.
+    Default: 10
+    ConstraintDescription: 'Must be in the range [10-50].'
+    MinValue: 10
+    MaxValue: 50
+
+  RadiusRetries:
+    Type: Number
+    Description: >
+      Total number of retries allowed for each RADIUS request.
+    Default: 3
+    ConstraintDescription: 'Must be in the range [3-10].'
+    MinValue: 3
+    MaxValue: 10
 
   DuoFailMode:
     Type: String
@@ -993,6 +1017,8 @@ Resources:
             # feature.
             ds_id: !Ref DirectoryServiceId
             proxy_port: !Ref RadiusPortNumber
+            radius_timeout: !Ref RadiusTimeout
+            radius_retries: !Ref RadiusRetries
             rs_arn: !Ref DuoConfigurationSettingsSecret
             DuoSsm: !Ref DuoServiceIps 
             Topic: !Ref DuoNotification
@@ -1012,9 +1038,7 @@ Resources:
             Completed = 2
             Failed = 3
             NotConfigured = 4
-
-          RADIUS_TIMEOUT = 5
-          RADIUS_RETRIES = 2
+          
           RADIUS_AUTHENTICATION_PROTOCOL = 'PAP'
 
           ds_client = boto3.client('ds')
@@ -1037,12 +1061,14 @@ Resources:
 
               port = int(os.environ['proxy_port'])
               rs = get_rs(os.environ['rs_arn'])
+              radius_timeout = int(os.environ['radius_timeout'])
+              radius_retries = int(os.environ['radius_retries'])
 
               radius_settings = {
                   "RadiusServers": [nlb],
                   "RadiusPort": port,
-                  "RadiusTimeout": RADIUS_TIMEOUT,
-                  "RadiusRetries": RADIUS_RETRIES,
+                  "RadiusTimeout": radius_timeout,
+                  "RadiusRetries": radius_retries,
                   "SharedSecret": rs,
                   "AuthenticationProtocol": RADIUS_AUTHENTICATION_PROTOCOL,
                   "DisplayLabel": "Duo MFA"

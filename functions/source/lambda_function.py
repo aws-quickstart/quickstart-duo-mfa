@@ -11,8 +11,6 @@ class RadiusStatus(Enum):
     NotConfigured = 4
 
 # Constants
-RADIUS_TIMEOUT = 10
-RADIUS_RETRIES = 3
 RADIUS_AUTHENTICATION_PROTOCOL = 'PAP'
 
 ds_client = boto3.client('ds')
@@ -59,12 +57,14 @@ def enable_radius(directory_service_id, instance_private_ip_addresses):
 
     radius_port_number = int(os.environ['radius_proxy_port_number'])
     radius_shared_secret = get_radius_shared_secret(os.environ['radius_shared_secret_arn'])
+    radius_timeout = int(os.environ['radius_timeout'])
+    radius_retries = int(os.environ['radius_retries'])
 
     radius_settings = {
         "RadiusServers": instance_private_ip_addresses,
         "RadiusPort": radius_port_number,
-        "RadiusTimeout": RADIUS_TIMEOUT,
-        "RadiusRetries": RADIUS_RETRIES,
+        "RadiusTimeout": radius_timeout,
+        "RadiusRetries": radius_retries,
         "SharedSecret": radius_shared_secret,
         "AuthenticationProtocol": RADIUS_AUTHENTICATION_PROTOCOL,
         "DisplayLabel": "Duo MFA"
