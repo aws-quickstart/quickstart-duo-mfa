@@ -328,7 +328,7 @@ Conditions:
   NoKmsAdmin: !Equals
     - !Ref AdminArn
     - ''
-  ManagedAdEgressRule: !!Equals 
+  ManagedAdEgressRule: !Equals 
     - !Ref DirectoryServiceType
     - 'Managed AD'
 
