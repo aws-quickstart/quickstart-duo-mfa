@@ -22,6 +22,7 @@ Metadata:
             default: RADIUS proxy configuration settings
         Parameters:
           - DirectoryServiceId
+          - DirectoryServiceType
           - RadiusProxyServerCount
           - RadiusPortNumber
           - DuoFailMode
@@ -102,6 +103,8 @@ Metadata:
           default: Duo API hostname
         DirectoryServiceId:
           default: Directory Service ID
+        DirectoryServiceType:
+          default: Directory Service Type
         RadiusProxyServerCount:
           default: RADIUS proxy server count
         RadiusPortNumber:
@@ -119,7 +122,12 @@ Metadata:
 #-----------------------------------------------------------
 
 Parameters:
-
+  DirectoryServiceType:
+    Type: String
+    Description: AD Connector or Managed AD type of directory
+    AllowedValues:
+      - 'AD Connector'
+      - 'Managed AD'
   AdminArn:
     Type: String
     Description: IAM Amazon Resource Name that has administrator rights to the AWS KMS key. If you keep this box blank, KMS key policy will not have an administrator role to administer it.
@@ -320,6 +328,9 @@ Conditions:
   NoKmsAdmin: !Equals
     - !Ref AdminArn
     - ''
+  ManagedAdEgressRule: !!Equals 
+    - !Ref DirectoryServiceType
+    - 'Managed AD'
 
 #-----------------------------------------------------------
 # Resources
@@ -615,10 +626,11 @@ Resources:
 
   #-------------------------------------------------
   # Create the Security Group Egress used by Directory
-  # to talk back to Duo ECS service
+  # to talk back to Duo ECS service for Managed AD
   #-------------------------------------------------
   DirectoryEgressRule:
     Type: AWS::EC2::SecurityGroupEgress
+    Condition: ManagedAdEgressRule
     Properties:
       IpProtocol: udp
       FromPort: !Ref RadiusPortNumber
