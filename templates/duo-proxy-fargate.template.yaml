@@ -125,6 +125,7 @@ Parameters:
   DirectoryServiceType:
     Type: String
     Description: AD Connector or Managed AD type of directory
+    Default: 'Managed AD'
     AllowedValues:
       - 'AD Connector'
       - 'Managed AD'
