@@ -15,7 +15,8 @@
 |===
 |Parameter label (name) |Default value|Description|Directory Service ID
 (`DirectoryServiceId`)|`**__Requires input__**`|ID of existing Directory Service (d-xxxxxxxxxx).
-|RADIUS proxy server count
+|Directory Service Type
+(`DirectoryServiceType`)|`Managed AD`|AD Connector or Managed AD type of directory|RADIUS proxy server count
 (`RadiusProxyServerCount`)|`2`|Number of RADIUS proxy Fargate servers to create.
 |RADIUS port number
 (`RadiusPortNumber`)|`1812`|Port on which to listen for incoming RADIUS access requests.
