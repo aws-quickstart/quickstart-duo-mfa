@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
   This template configures Duo RADIUS servers for use in directory service MFA (can be used
   for AWS SSO, WorkSpaces, and other SAML service providers). It deploys
-  a new VPC and AWS managed Active Directory environment.
+  a new VPC and AWS managed Active Directory environment. (qs-1s5bn1dk6)
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
