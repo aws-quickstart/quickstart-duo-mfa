@@ -1,4 +1,4 @@
-## Duo MFA for AWS Directory Service on AWS—Quick Start
+## Cisco Duo MFA for AWS Directory Service on AWS—Quick Start
 
 For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/n7wKB?).
 
