@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.15">
-<title>Duo MFA on the AWS Cloud</title>
+<title>Cisco Duo MFA on the AWS Cloud</title>
 <style>
 
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -825,7 +825,7 @@ p.footer-text a{color:#d7d8d8}
 <div id="toctitle"></div>
 <ul class="sectlevel1">
 <li><a href="#_overview">Overview</a></li>
-<li><a href="#_duo_mfa_on_aws">Duo MFA on AWS</a></li>
+<li><a href="#_cisco_duo_mfa_on_aws">Cisco Duo MFA on AWS</a></li>
 <li><a href="#_aws_costs">AWS costs</a></li>
 <li><a href="#_software_licenses">Software licenses</a></li>
 <li><a href="#_architecture">Architecture</a></li>
@@ -856,6 +856,7 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_view_the_amazon_ecs_task_logs_in_cloudwatch_logs">View the Amazon ECS task logs in CloudWatch Logs</a></li>
 </ul>
 </li>
+<li><a href="#_customer_responsibility">Customer responsibility</a></li>
 <li><a href="#_parameter_reference">Parameter reference</a>
 <ul class="sectlevel2">
 <li><a href="#_parameters_for_deploying_into_a_new_vpc">Parameters for deploying into a new VPC</a></li>
@@ -872,7 +873,7 @@ p.footer-text a{color:#d7d8d8}
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<h2 id="_duo_mfa_on_the_aws_cloud" class="discrete text-center">Duo MFA on the AWS Cloud</h2>
+<h2 id="_cisco_duo_mfa_on_the_aws_cloud" class="discrete text-center">Cisco Duo MFA on the AWS Cloud</h2>
 <h2 id="_quick_start_reference_deployment" class="discrete text-left text-center">Quick Start Reference Deployment</h2>
 <div class="imageblock text-center">
 <div class="content">
@@ -898,7 +899,7 @@ report bugs, or submit feature ideas for this Quick Start.
 </table>
 </div>
 <div class="paragraph text-left">
-<p>This Quick Start was created by Duo Security in collaboration with Amazon Web Services (AWS). <a href="http://aws.amazon.com/quickstart/" target="_blank" rel="noopener">Quick Starts</a> are automated reference deployments that use AWS CloudFormation templates to deploy key technologies on AWS, following AWS best practices.</p>
+<p>This Quick Start was created by Duo Security (a wholly owned subsidiary of Cisco) in collaboration with Amazon Web Services (AWS). <a href="http://aws.amazon.com/quickstart/" target="_blank" rel="noopener">Quick Starts</a> are automated reference deployments that use AWS CloudFormation templates to deploy key technologies on AWS, following AWS best practices.</p>
 </div>
 </div>
 </div>
@@ -941,7 +942,7 @@ Amazon may share user-deployment information with the AWS Partner that collabora
 </div>
 </div>
 <div class="sect1">
-<h2 id="_duo_mfa_on_aws">Duo MFA on AWS</h2>
+<h2 id="_cisco_duo_mfa_on_aws">Cisco Duo MFA on AWS</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Signing in to the AWS Management Console traditionally requires a user name and password. To help mitigate the threat of leaked credentials, AWS offers the ability to enable MFA for your AWS Identity and Access Management (IAM) users or your AWS account root users.</p>
@@ -1183,76 +1184,12 @@ deploy, and operate your infrastructure and applications on the AWS Cloud.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_supported_regions">Supported Regions</h4>
+<h4 id="_supported_aws_regions">Supported AWS Regions</h4>
 <div class="paragraph">
-<p>This Quick Start supports the following Regions:</p>
+<p>For any Quick Start to work in a Region other than its default Region, all the services it deploys must be supported in that Region. You can launch a Quick Start in any Region and see if it works. If you get an error such as “Unrecognized resource type,” the Quick Start is not supported in that Region.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>us-east-2 (Ohio)</p>
-</li>
-<li>
-<p>us-east-1 (N. Virginia)</p>
-</li>
-<li>
-<p>us-west-1 (N. California)</p>
-</li>
-<li>
-<p>us-west-2 (Oregon)</p>
-</li>
-<li>
-<p>ap-east-1 (Hong Kong)</p>
-</li>
-<li>
-<p>ap-south-1 (Mumbai)</p>
-</li>
-<li>
-<p>ap-northeast-2 (Seoul)</p>
-</li>
-<li>
-<p>ap-southeast-1 (Singapore)</p>
-</li>
-<li>
-<p>ap-southeast-2 (Sydney)</p>
-</li>
-<li>
-<p>ap-northeast-1 (Tokyo)</p>
-</li>
-<li>
-<p>ca-central-1 (Central)</p>
-</li>
-<li>
-<p>eu-central-1 (Frankfurt)</p>
-</li>
-<li>
-<p>eu-west-1 (Ireland)</p>
-</li>
-<li>
-<p>eu-west-2 (London)</p>
-</li>
-<li>
-<p>eu-south-1 (Milan)</p>
-</li>
-<li>
-<p>eu-west-3 (Paris)</p>
-</li>
-<li>
-<p>eu-north-1 (Stockholm)</p>
-</li>
-<li>
-<p>me-south-1 (Bahrain)</p>
-</li>
-<li>
-<p>sa-east-1 (São Paulo)</p>
-</li>
-<li>
-<p>us-gov-east-1, AWS GovCloud (US-East)</p>
-</li>
-<li>
-<p>us-gov-west-1, AWS GovCloud (US-West)</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>For an up-to-date list of AWS Regions and the AWS services they support, see <a href="https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/" target="_blank" rel="noopener">AWS Regional Services</a>.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1390,18 +1327,6 @@ Certain Regions are available on an opt-in basis. For more information, see <a h
 </div>
 <div class="sect2">
 <h3 id="_launch_the_quick_start">Launch the Quick Start</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using this Quick Start. For full details, see the pricing pages for each AWS service used by this Quick Start. Prices are subject to change.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Each deployment takes about 45 minutes to complete.</p>
 </div>
@@ -1427,7 +1352,7 @@ You are responsible for the cost of the AWS services used while running this Qui
 </table>
 </li>
 <li>
-<p>Check the AWS Region that&#8217;s displayed in the upper-right corner of the navigation bar, and change it if necessary. This Region is where the network infrastructure for Duo MFA is built. The template is launched in the us-east-1 Region by default.</p>
+<p>Check the AWS Region that&#8217;s displayed in the upper-right corner of the navigation bar, and change it if necessary. This Region is where you build the infrastructure. The template is launched in the us-east-1 Region by default. For more information, see <a href="#_supported_aws_regions">Supported AWS Regions</a> earlier in this guide.</p>
 </li>
 <li>
 <p>On the <strong>Create stack</strong> page, keep the default setting for the template URL, and then choose <strong>Next</strong>.</p>
@@ -1436,7 +1361,7 @@ You are responsible for the cost of the AWS services used while running this Qui
 <p>On the <strong>Specify stack details</strong> page, change the stack name if needed. Review the parameters for the template. Provide values for the parameters that require input. For all other parameters, review the default settings and customize them as necessary. For details on each parameter, see the <a href="#_parameter_reference">Parameter reference</a> section of this guide. When you finish reviewing and customizing the parameters, choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you’re finished, choose <strong>Next</strong>.</p>
+<p>On the <strong>Configure stack options</strong> page, you can <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html" target="_blank" rel="noopener">specify tags</a> (key-value pairs) for resources in your stack and <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-add-tags.html" target="_blank" rel="noopener">set advanced options</a>. When you finish, choose <strong>Next</strong>.</p>
 </li>
 <li>
 <p>On the <strong>Review</strong> page, review and confirm the template settings. Under <strong>Capabilities</strong>, select the two check boxes to acknowledge that the template creates IAM resources and might require the ability to automatically expand macros.</p>
@@ -1741,6 +1666,14 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_customer_responsibility">Customer responsibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you successfully deploy this Quick Start, confirm that your resources and services are updated and configured — including any required patches — to meet your security and other needs. For more information, see the <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank" rel="noopener">AWS Shared Responsibility Model</a>.</p>
 </div>
 </div>
 </div>
@@ -2322,7 +2255,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 <h2 id="_quick_start_reference_deployments">Quick Start reference deployments</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>See the <a href="https://aws.amazon.com/quickstart/">AWS Quick Start home page</a>.</p>
+<p>See the <a href="https://aws.amazon.com/quickstart/" target="_blank" rel="noopener">AWS Quick Start home page</a>.</p>
 </div>
 </div>
 </div>
@@ -2352,16 +2285,16 @@ and to share your customizations with others.</p>
 <p class="footer-text">
 <!-- We can use document attributes: -->
 <!-- Generated with Asciidoctor v2.0.15. -->
-<a href="https://aws.amazon.com/privacy/">Privacy</a> | <a href="https://aws.amazon.com/terms/">Site terms</a> | &copy; 2021, Amazon Web Services, Inc. or its affiliates and Duo Security. All rights reserved.
+<a href="https://aws.amazon.com/privacy/">Privacy</a> | <a href="https://aws.amazon.com/terms/">Site terms</a> | &copy; 2021, Amazon Web Services, Inc. or its affiliates and Duo Security (a wholly owned subsidiary of Cisco). All rights reserved.
 </p>
 </body>
 </html>
 <!--
 repo commit:
-fcd3a08de39e70616f22459d68a82946c19b4521
+9ff7a3da8db9132a3651b40130efc47c16f72ba2
 
 submodule config:
- 41862fa5fb846466fba46a36faf67e2a77c2bfc5 docs/boilerplate (remotes/origin/swingline-test)
+ 4ee94d6b60ec455e5b452e8ad9841eb825704b70 docs/boilerplate (heads/main)
  ffc7af4e59a09dbf52199a3ecf70f3805abeff48 submodules/quickstart-aws-vpc (v1.0-58-gffc7af4)
  152fda102e8514604eaf201be381d814438b2047 submodules/quickstart-microsoft-activedirectory (heads/main)
 -->
