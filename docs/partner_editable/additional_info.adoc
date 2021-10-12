@@ -30,9 +30,9 @@ After you launch the stack, verify your deployment and, if desired, modify your 
 .. At the bottom of the page, for *Groups*, enter the Active Directory user group you want to import into Duo. Choose *Save Groups*.
 .. At the top of the page, select *Sync Now*.
 .. On the left, choose *Users*. Review the user list that was imported from your Active Directory group. You should see details about the users that were imported from Active Directory as well as Duo-specific details.
-.. Add hardware tokens. To do so, select a user, choose *Add Hardware Token*, enter the serial number of one of the tokens that you ordered, and then choose *Attach Hardware Token*.
+.. If you intend to provide 2FA via hardware tokens, add them in the Duo Admin Panel. To do so, select a user, choose *Add Hardware Token*, enter the serial number of one of the tokens that you ordered, and then choose *Attach Hardware Token*. Alternatively, you can download Duo Mobile to your iOS or Android device, and use the code generator functionality. Please see https://duo.com/docs/administration-devices[Duo's documentation] for more information.
 . Update user settings for each user.
-.. From the Duo administrator panel, choose *Users* on the left side of the screen, and select a user.
+.. From the Duo Admin Panel, choose *Users* on the left side of the screen, and select a user.
 .. Choose the status—either *Active* or *Bypass*—to determine whether to require MFA when that user logs in.
 .. (Optional) Add a phone number so that the user can use the Duo Mobile app.
 
