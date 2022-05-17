@@ -1400,6 +1400,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - inspector2:ListFindings
+                Resource: "*"
+              - Effect: Allow
+                Action:
                   - ecr:GetAuthorizationToken
                 Resource: "*"
               - Effect: Allow
@@ -1413,7 +1417,6 @@ Resources:
                   - ecr:CompleteLayerUpload
                   - ecr:DescribeImageScanFindings
                 Resource: !GetAtt DuoEcrRepository.Arn
-
 
   DuoCodeBuildEcr:
     Type: 'AWS::CodeBuild::Project'
