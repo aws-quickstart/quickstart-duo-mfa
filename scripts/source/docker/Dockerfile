@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi7/ubi
+FROM public.ecr.aws/amazonlinux/amazonlinux:latest
 
 COPY run_duo.sh /app/
 RUN set -xe && \
