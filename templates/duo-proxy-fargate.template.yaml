@@ -1240,6 +1240,47 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: !GetAtt DuoKmsKey.Arn
+  #--------------------------------------------------
+  # Create S3 Bucket Policy for CodePipeline 
+  # Artifact Bucket
+  #--------------------------------------------------
+  ArtifactBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ArtifactBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:PutObject
+            Effect: Allow
+            Resource: 
+              - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}/*'
+            Principal: 
+              AWS: 
+                - !GetAtt DuoCodeBuildRole.Arn
+                - !GetAtt DuoCodePipelineRole.Arn
+          - Action:
+              - s3:ListBucket
+            Effect: Allow
+            Resource: 
+              - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}'
+            Principal: 
+              AWS: 
+                - !GetAtt DuoCodeBuildRole.Arn
+                - !GetAtt DuoCodePipelineRole.Arn
+          - Action:
+            - s3:ListBucket
+            Effect: Allow
+            Principal: '*'
+            Resource: !GetAtt ArtifactBucket.Arn
+            Condition:
+              StringLike:
+                'aws:userid': 
+                  - !Join [ '', [ !GetAtt DuoCodeBuildRole.RoleId, ':*' ] ]
+                  - !Join [ '', [ !GetAtt DuoCodePipelineRole.RoleId, ':*' ] ]
+                  
   
   #--------------------------------------------------
   # Create an ECR repository for DuoAuthProxy 
@@ -1249,8 +1290,6 @@ Resources:
     Type: AWS::ECR::Repository
     Properties: 
       RepositoryName: !Ref EcrRepoName
-      ImageScanningConfiguration: 
-        ScanOnPush: "true"
       LifecyclePolicy:
         LifecyclePolicyText: !Sub |
                               {
@@ -1258,7 +1297,7 @@ Resources:
                                   "rulePriority": 1,
                                   "description": "remove older images",
                                   "selection": {
-                                    "tagStatus": "any",
+                                    "tagStatus": "untagged",
                                     "countType": "sinceImagePushed",
                                     "countUnit": "days",
                                     "countNumber": ${EcrImageRetention}
@@ -1401,6 +1440,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
+                  - inspector2:ListFindings
+                  - inspector2:ListCoverage
                 Resource: "*"
               - Effect: Allow
                 Action:
