@@ -42,7 +42,7 @@ Metadata:
         Parameters:
           - EcrImageRetention
           - EcrRepoName
-          
+
       - Label:
             default: CodeCommit configuration
         Parameters:
@@ -139,14 +139,14 @@ Parameters:
   #   Description: S3 bucket name where the code for Duo AuthProxy is located
   #   AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
   #   ConstraintDescription: "S3 Bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-)."
-    
-    
+
+
   # CodeCommitS3BucketKey:
   #   Type: String
   #   Description: S3 bucket key location where the code for Duo AuthProxy
   #   AllowedPattern: "^[0-9a-zA-Z-/.]*$"
   #   ConstraintDescription: "S3 Bucket key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/)."
-    
+
   EcrRepoName:
     Type: String
     Description: Name of the Duo Authentication proxy ECR repo.
@@ -166,14 +166,14 @@ Parameters:
     Description: Name of the CodeCommit repo that which will manage all the code base.
     Default: duo-authproxy
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
-  CodeCommitBranchName: 
+  CodeCommitBranchName:
     Type: String
     Description: Name of the CodeCommit branch where all the code base is located. This branch starts actions in CodePipeline.
     Default: ecr
     AllowedPattern: "^[0-9a-zA-Z-/]*$"
   EcrCronExpression:
     Type: String
-    Description: Cron expression trigger. By default, it's set at 0000 UTC every Saturday. See https://docs.aws.amazon.com/eventbridge/latest/userguide/scheduled-events.html. 
+    Description: Cron expression trigger. By default, it's set at 0000 UTC every Saturday. See https://docs.aws.amazon.com/eventbridge/latest/userguide/scheduled-events.html.
     Default: '0 0 ? * SAT *'
   NotificationEmail:
     Type: String
@@ -201,7 +201,7 @@ Parameters:
     Description: >
       Password for Active Directory user with read-only access to the directory for Duo's Directory Sync configuration.
     Default:  ''
-  
+
   DirectoryIntegrationKey:
     Type: String
     Description: >
@@ -219,7 +219,7 @@ Parameters:
     Type: String
     Description: >
       Integration key retrieved from the Duo RADIUS application configuration.
-    
+
 
   DuoSecretKey:
     Type: String
@@ -285,27 +285,27 @@ Parameters:
       - 6
       - 7
       - 8
-      - 9 
+      - 9
       - 10
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: The Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a
       hyphen (-).
     Default: aws-quickstart
-    Description: Name of the S3 bucket for your copy of the Quick Start assets. 
-      Keep the default name unless you are customizing the template. 
-      Changing the name updates code references to point to a new Quick 
-      Start location. This name can include numbers, lowercase letters, 
-      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
+    Description: Name of the S3 bucket for your copy of the Quick Start assets.
+      Keep the default name unless you are customizing the template.
+      Changing the name updates code references to point to a new Quick
+      Start location. This name can include numbers, lowercase letters,
+      uppercase letters, and hyphens, but do not start or end with a hyphen (-).
       See https://aws-quickstart.github.io/option1.html.
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
-    Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is 
-    hosted. Keep the default Region unless you are customizing the template. 
-    Changing this Region updates code references to point to a new Quick Start location. 
-    When using your own bucket, specify the Region. 
+    Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is
+    hosted. Keep the default Region unless you are customizing the template.
+    Changing this Region updates code references to point to a new Quick Start location.
+    When using your own bucket, specify the Region.
     See https://aws-quickstart.github.io/option1.html.'
     Type: String
   QSS3KeyPrefix:
@@ -314,12 +314,12 @@ Parameters:
       uppercase letters, hyphens (-), and forward slashes (/). The prefix should
       end with a forward slash (/).
     Default: quickstart-duo-mfa/
-    Description: S3 key prefix that is used to simulate a directory for your copy of the 
-      Quick Start assets. Keep the default prefix unless you are customizing 
-      the template. Changing this prefix updates code references to point to 
-      a new Quick Start location. This prefix can include numbers, lowercase 
-      letters, uppercase letters, hyphens (-), and forward slashes (/). End with 
-      a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+    Description: S3 key prefix that is used to simulate a directory for your copy of the
+      Quick Start assets. Keep the default prefix unless you are customizing
+      the template. Changing this prefix updates code references to point to
+      a new Quick Start location. This prefix can include numbers, lowercase
+      letters, uppercase letters, hyphens (-), and forward slashes (/). End with
+      a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html
       and https://aws-quickstart.github.io/option1.html.
     Type: String
 #-----------------------------------------------------------
@@ -329,7 +329,7 @@ Conditions:
   NoKmsAdmin: !Equals
     - !Ref AdminArn
     - ''
-  ManagedAdEgressRule: !Equals 
+  ManagedAdEgressRule: !Equals
     - !Ref DirectoryServiceType
     - 'Managed AD'
 
@@ -398,13 +398,13 @@ Resources:
                 directories = boto3.client('ds').describe_directories(DirectoryIds = [directory_id])['DirectoryDescriptions']
                 directory = directories[0]
                 network = ''
-                if directory['Type'] == 'ADConnector': 
+                if directory['Type'] == 'ADConnector':
                   network = 'ConnectSettings'
                   ips = directory['ConnectSettings']['ConnectIps']
-                elif directory['Type'] == 'MicrosoftAD': 
+                elif directory['Type'] == 'MicrosoftAD':
                   network = 'VpcSettings'
                   ips = directory['DnsIpAddrs']
-              
+
                 responseData = {}
                 responseData['VpcId'] = directory[network]['VpcId']
                 responseData['SecurityGroupId'] = directory[network]['SecurityGroupId']
@@ -415,7 +415,7 @@ Resources:
                 # print(reponseData)
                 cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, '')
               except Exception as e:
-                print(e) 
+                print(e)
                 cfnresponse.send(event, context, cfnresponse.FAILED, responseData, '')
 
   #--------------------------------------------------
@@ -461,7 +461,7 @@ Resources:
         Value: !Ref DirectoryServiceId
 
   #------------------------------------------------
-  # Automatically rotate Secrets Manager secret 
+  # Automatically rotate Secrets Manager secret
   # every 7 days
   #------------------------------------------------
   DuoConfigurationSettingsSecretRotationSchedule:
@@ -474,7 +474,7 @@ Resources:
         AutomaticallyAfterDays: 7
 
   #------------------------------------------------
-  # Allow Lambda to rotate secrets 
+  # Allow Lambda to rotate secrets
   #------------------------------------------------
   DuoConfigurationSettingsSecretRotationLambdaInvokePermission:
     Type: AWS::Lambda::Permission
@@ -517,7 +517,9 @@ Resources:
         - FARGATE
       Cpu: '1024'
       Memory: 2GB
-      Family: !Sub '${AWS::StackName}'
+      Family: !Sub
+        - Duo-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ]]
       ExecutionRoleArn: !GetAtt DuoTaskRoleArn.Arn
       TaskRoleArn: !GetAtt DuoTaskRoleArn.Arn
       ContainerDefinitions:
@@ -542,7 +544,7 @@ Resources:
               Value: !Ref RadiusPortNumber
             - Name: AD_SYNC
               Value: !Ref AdSync
-            
+
           # Set secret environment variable for the container
           Secrets:
             - Name: DuoSecret
@@ -582,22 +584,22 @@ Resources:
 
   #-------------------------------------------------
   # Create the Elastic Container Service Fargate
-  # Service used by the Duo RADIUS 
+  # Service used by the Duo RADIUS
   #-------------------------------------------------
   DuoService:
     Type: AWS::ECS::Service
-    Properties: 
+    Properties:
       Cluster: !Ref DuoCluster
       DeploymentConfiguration:
         MaximumPercent: 400
         MinimumHealthyPercent: 100
       DesiredCount: !Ref RadiusProxyServerCount
       LaunchType: FARGATE
-      NetworkConfiguration: 
-        AwsvpcConfiguration: 
-          SecurityGroups: 
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          SecurityGroups:
             - !Ref DuoServiceSg
-          Subnets: 
+          Subnets:
             - !GetAtt GetDirectoryServiceDetails.SubnetId1
             - !GetAtt GetDirectoryServiceDetails.SubnetId2
       TaskDefinition: !Ref DuoTaskDefinition
@@ -640,41 +642,41 @@ Resources:
       GroupId: !GetAtt GetDirectoryServiceDetails.SecurityGroupId
 
   #-------------------------------------------------
-  # Create the CloudWatch Event Rule for 
+  # Create the CloudWatch Event Rule for
   # Duo ECS Service
   #-------------------------------------------------
   DuoServiceEvents:
     Type: AWS::Events::Rule
     Properties:
       Description: "EventRule"
-      EventPattern: 
-        source: 
+      EventPattern:
+        source:
           - "aws.ecs"
-        detail-type: 
+        detail-type:
           - "ECS Service Action"
-        detail: 
-          clusterArn: 
+        detail:
+          clusterArn:
             - !GetAtt DuoCluster.Arn
       State: "ENABLED"
-      Targets: 
-        - 
+      Targets:
+        -
           Arn: !GetAtt ProcessDuoServiceFunction.Arn
           Id: "TargetFunctionV1"
 
   #-------------------------------------------------
-  # Allow the CloudWatch Event Rule for 
+  # Allow the CloudWatch Event Rule for
   # Duo ECS Service to trigger Lambda
   #-------------------------------------------------
-  PermissionForEventsToInvokeLambda: 
+  PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
-    Properties: 
+    Properties:
       FunctionName: !Ref ProcessDuoServiceFunction
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn: !GetAtt DuoServiceEvents.Arn
 
   #-------------------------------------------------
-  # Create an empty Systems Manager Parameter 
+  # Create an empty Systems Manager Parameter
   # for Duo ECS tasks IP adresses
   #-------------------------------------------------
   DuoServiceIps:
@@ -717,7 +719,7 @@ Resources:
                 Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${DuoServiceIps}'
 
   #--------------------------------------------------
-  # This custom Lambda function will processing events 
+  # This custom Lambda function will processing events
   # from Duo ECS Service
   #--------------------------------------------------
   ProcessDuoServiceFunction:
@@ -769,17 +771,17 @@ Resources:
                 ip_string = ','.join([str(elem) for elem in ip])
                 if old_ips == ip_string:
                   print('There has been no change in the IP address. No action will be taken')
-                else: 
+                else:
                   print('Fargate task IP addresses have changed.')
                   ssm.put_parameter(Name=os.environ['DuoSsm'],Value=ip_string,Type='String',Overwrite=True)
 
               else:
                 print('Cluster name does not match. Given: ' + os_cluster + ' observed: ' + duo_cluster)
-            else: 
+            else:
               print('Service names do not match. Given: ' + os_srv + ' observed: ' + duo_service)
 
   #--------------------------------------------------
-  # Create an IAM role for 
+  # Create an IAM role for
   # Radius Shared Secret Rotation
   #--------------------------------------------------
   RadiusSharedSecretRotationRole:
@@ -803,7 +805,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - ecs:UpdateService
-                Resource: !Sub 
+                Resource: !Sub
                           - 'arn:${AWS::Partition}:ecs:${AWS::Region}:${AWS::AccountId}:service/${DuoCluster}/${DuoServiceName}'
                           - DuoServiceName: !GetAtt DuoService.Name
               - Effect: Allow
@@ -868,7 +870,7 @@ Resources:
 
               elif step == "finishSecret":
                   finish_secret(secretsmanager_client, arn, token)
-                  
+
               ecs.update_service(cluster=duo_cluster,service=srv, forceNewDeployment=True)
 
           def create_secret(secretsmanager_client, arn, token):
@@ -901,33 +903,33 @@ Resources:
               print("finishSecret: Successfully set AWSCURRENT stage to version %s for secret %s." % (version, arn))
 
   #--------------------------------------------------
-  # Create CloudWatch Event Rule to trigger when 
+  # Create CloudWatch Event Rule to trigger when
   # System Manager Parameter changes
   #--------------------------------------------------
   UpdateDirectoryServiceEvent:
     Type: AWS::Events::Rule
     Properties:
-      EventPattern: 
-        source: 
+      EventPattern:
+        source:
           - "aws.ssm"
-        detail-type: 
+        detail-type:
           - "Parameter Store Change"
-        detail: 
-          name: 
+        detail:
+          name:
             - !Ref DuoServiceIps
       State: "ENABLED"
-      Targets: 
-        - 
+      Targets:
+        -
           Arn: !GetAtt UpdateDirectoryServiceMfaSettings.Arn
           Id: "TargetFunctionV1"
 
   #--------------------------------------------------
-  # Allow CloudWatch Event Rule to trigger Lambda 
+  # Allow CloudWatch Event Rule to trigger Lambda
   # System Manager Parameter changes
   #--------------------------------------------------
-  UpdateDirectoryPermissionForEventsToInvokeLambda: 
+  UpdateDirectoryPermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
-    Properties: 
+    Properties:
       FunctionName: !Ref UpdateDirectoryServiceMfaSettings
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
@@ -967,11 +969,11 @@ Resources:
                   - secretsmanager:GetSecretValue
                 Resource: !Ref DuoConfigurationSettingsSecret
               - Effect: Allow
-                Action: 
+                Action:
                   - ssm:GetParameter
                 Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${DuoServiceIps}'
               - Effect: Allow
-                Action: 
+                Action:
                   - sns:Publish
                 Resource: !Ref DuoNotification
 
@@ -1007,7 +1009,7 @@ Resources:
             ds_id: !Ref DirectoryServiceId
             proxy_port: !Ref RadiusPortNumber
             rs_arn: !Ref DuoConfigurationSettingsSecret
-            DuoSsm: !Ref DuoServiceIps 
+            DuoSsm: !Ref DuoServiceIps
             Topic: !Ref DuoNotification
       Tags:
       - Key: duo:DirectoryServiceId
@@ -1039,10 +1041,10 @@ Resources:
           ips = ssm.get_parameter(Name=os.environ['DuoSsm'])['Parameter']['Value']
           def lambda_handler(event, context):
             print(json.dumps(event))
-            
+
             print('Directory Service Id: {}'.format(ds_id))
             print('Fargate IP Addresses : {}'.format(ips))
-            
+
             enable_radius(ds_id, ips)
 
 
@@ -1103,7 +1105,7 @@ Resources:
                   else:
                       time.sleep(SLEEP_TIME)
                       attempt_number +=1
-              
+
               if attempt_number == MAX_ATTEMPTS:
                 print('Radius create/update timed out')
                 msg = 'Duo MFA update failed on '+ ds_id +'. Please check.'
@@ -1138,10 +1140,10 @@ Resources:
   #--------------------------------------------------
   DuoEcsScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
-    Properties: 
+    Properties:
       MaxCapacity: !Ref DuoMaxCapacity
       MinCapacity: !Ref RadiusProxyServerCount
-      ResourceId: !Sub 
+      ResourceId: !Sub
                     - 'service/${DuoCluster}/${DuoServiceName}'
                     - DuoServiceName: !GetAtt DuoService.Name
 
@@ -1156,7 +1158,9 @@ Resources:
   DuoServiceScalingPolicyCpu:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName: !Sub ${AWS::StackName}-target-tracking-cpu70
+      PolicyName: !Sub
+      - ${StackID}-target-tracking-cpu70
+      - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
       PolicyType: TargetTrackingScaling
       ScalingTargetId: !Ref DuoEcsScalableTarget
       TargetTrackingScalingPolicyConfiguration:
@@ -1165,7 +1169,7 @@ Resources:
         ScaleOutCooldown: 60
         PredefinedMetricSpecification:
           PredefinedMetricType: ECSServiceAverageCPUUtilization
-  
+
   #--------------------------------------------------
   # Create an Application Auto Scaling policy
   # for Duo ECS service based on Memory (RAM)
@@ -1173,7 +1177,9 @@ Resources:
   DuoServiceScalingPolicyMem:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName: !Sub ${AWS::StackName}-target-tracking-mem80
+      PolicyName: !Sub
+      - ${StackID}-target-tracking-mem80
+      - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
       PolicyType: TargetTrackingScaling
       ScalingTargetId: !Ref DuoEcsScalableTarget
       TargetTrackingScalingPolicyConfiguration:
@@ -1182,9 +1188,9 @@ Resources:
         ScaleOutCooldown: 60
         PredefinedMetricSpecification:
           PredefinedMetricType: ECSServiceAverageMemoryUtilization
-  
+
   #--------------------------------------------------
-  # Create an alarm for Duo ECS service CPU 
+  # Create an alarm for Duo ECS service CPU
   # will send email when CPU > 90
   #--------------------------------------------------
   DuoServiceAlarmCpu:
@@ -1207,7 +1213,7 @@ Resources:
         Value: !Ref DuoCluster
 
   #--------------------------------------------------
-  # Create an alarm for Duo ECS service CPU 
+  # Create an alarm for Duo ECS service CPU
   # will send email when Memory > 90
   #--------------------------------------------------
   DuoServiceAlarmMemory:
@@ -1232,7 +1238,7 @@ Resources:
   #--------------------------------------------------
   # Create S3 Bucket for CodePipeline Artifacts
   #--------------------------------------------------
-  ArtifactBucket: 
+  ArtifactBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketEncryption:
@@ -1240,16 +1246,16 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: !GetAtt DuoKmsKey.Arn
-  
+
   #--------------------------------------------------
-  # Create an ECR repository for DuoAuthProxy 
+  # Create an ECR repository for DuoAuthProxy
   # Set a lifecycle policy to retain based on input
   #--------------------------------------------------
-  DuoEcrRepository: 
+  DuoEcrRepository:
     Type: AWS::ECR::Repository
-    Properties: 
+    Properties:
       RepositoryName: !Ref EcrRepoName
-      ImageScanningConfiguration: 
+      ImageScanningConfiguration:
         ScanOnPush: "true"
       LifecyclePolicy:
         LifecyclePolicyText: !Sub |
@@ -1291,7 +1297,7 @@ Resources:
       Targets:
         - Arn: !Ref DuoNotification
           Id: DuoEcrPipeline
-      
+
   #--------------------------------------------------
   # Allow CloudWatch permissions to send emails
   #--------------------------------------------------
@@ -1320,7 +1326,7 @@ Resources:
         S3:
           Bucket: !Ref ArtifactBucket
           Key: !Sub ${QSS3KeyPrefix}scripts/packages/code_commit.zip
-  
+
   #--------------------------------------------------
   # Create an IAM role for Duo CodePipeline
   # grant access to CodeCommit. CodeBuild and KMS
@@ -1336,18 +1342,20 @@ Resources:
             Service: codepipeline.amazonaws.com
           Action: sts:AssumeRole
       Path: /
-      ManagedPolicyArns:   
+      ManagedPolicyArns:
       - !Sub "arn:${AWS::Partition}:iam::aws:policy/AWSCodeCommitReadOnly"
       - !Ref DuoCodeBuildPolicy
       - !Ref DuoKmsIamPolicy
 
   #--------------------------------------------------
-  # Create an IAM policy for CodeBuild 
+  # Create an IAM policy for CodeBuild
   #--------------------------------------------------
   DuoCodeBuildPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      ManagedPolicyName: !Sub '${AWS::StackName}-${AWS::Region}-codebuild'
+      ManagedPolicyName: !Sub
+      - ${StackID}-${AWS::Region}-codebuild
+      - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -1356,7 +1364,9 @@ Resources:
           - codebuild:BatchGetBuilds
           Effect: Allow
           Resource:
-          - !Sub 'arn:${AWS::Partition}:codebuild:${AWS::Region}:${AWS::AccountId}:project/${AWS::StackName}'
+          - !Sub
+              - 'arn:${AWS::Partition}:codebuild:${AWS::Region}:${AWS::AccountId}:project/${StackID}'
+              - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
         - Action:
           - codecommit:UploadArchive
           Effect: Allow
@@ -1377,7 +1387,7 @@ Resources:
           - logs:PutLogEvents
 
   #--------------------------------------------------
-  # Create an IAM Role for CodeBuild 
+  # Create an IAM Role for CodeBuild
   #--------------------------------------------------
   DuoCodeBuildRole:
     Type: AWS::IAM::Role
@@ -1390,7 +1400,7 @@ Resources:
             Service: codebuild.amazonaws.com
           Action: sts:AssumeRole
       Path: /
-      ManagedPolicyArns:    
+      ManagedPolicyArns:
       - !Ref DuoCodeBuildPolicy
       - !Ref DuoKmsIamPolicy
       Policies:
@@ -1398,10 +1408,6 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Effect: Allow
-                Action:
-                  - inspector2:ListFindings
-                Resource: "*"
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
@@ -1417,6 +1423,7 @@ Resources:
                   - ecr:CompleteLayerUpload
                   - ecr:DescribeImageScanFindings
                 Resource: !GetAtt DuoEcrRepository.Arn
+
 
   DuoCodeBuildEcr:
     Type: 'AWS::CodeBuild::Project'
@@ -1434,18 +1441,20 @@ Resources:
           - Name: AWS_ACCOUNT_NUMBER
             Type: PLAINTEXT
             Value: !Ref 'AWS::AccountId'
-        Image: 'aws/codebuild/standard:5.0'
+        Image: 'aws/codebuild/standard:3.0'
         Type: LINUX_CONTAINER
         PrivilegedMode: true
-      Name: !Sub '${AWS::StackName}'
+      Name: !Sub
+        - DuoCodeBuildEcr-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
       ServiceRole: !GetAtt DuoCodeBuildRole.Arn
       Source:
         BuildSpec: buildspec.yaml
         Type: CODEPIPELINE
       TimeoutInMinutes: 480
-  
+
   #--------------------------------------------------
-  # Create CodeBuild Project 
+  # Create CodeBuild Project
   # for building AuthProxy ECR
   #--------------------------------------------------
   DuoEcrPipeline:
@@ -1514,9 +1523,9 @@ Resources:
                   arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${DuoEcrPipeline}
             Version: 2012-10-17
           PolicyName: 'duo-ecr-pipeline-trigger'
-  
+
   #--------------------------------------------------
-  # Create CodeBuild Project 
+  # Create CodeBuild Project
   # for building AuthProxy ECR
   #--------------------------------------------------
   DuoEcrPipelineCloudWatchEventRule:
@@ -1545,7 +1554,7 @@ Resources:
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
-  # Create a weekly CloudWatch trigger 
+  # Create a weekly CloudWatch trigger
   # for building AuthProxy ECR
   #--------------------------------------------------
   DuoEcrPipelineWeeklyTrigger:
@@ -1560,7 +1569,7 @@ Resources:
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
-  # Create an SSM parameter 
+  # Create an SSM parameter
   # to store Custom Resource Event
   #--------------------------------------------------
   DuoCustomResourceEvent:
@@ -1579,7 +1588,7 @@ Resources:
       KmsMasterKeyId: !GetAtt DuoKmsKey.Arn
 
   #--------------------------------------------------
-  # Create CloudWatch Event on success/failure  
+  # Create CloudWatch Event on success/failure
   # for SNS backed Custom Resource
   #--------------------------------------------------
   DuoPipelineSnsEvents:
@@ -1606,7 +1615,7 @@ Resources:
           Id: DuoSnsCustomResourceLambda
 
   #--------------------------------------------------
-  # Create SNS Subscription to Lambda 
+  # Create SNS Subscription to Lambda
   # from SNS backed Custom Resource
   #--------------------------------------------------
   DuoSnsCustomResourceTopicSubscriptionLambda:
@@ -1615,12 +1624,12 @@ Resources:
       Endpoint: !GetAtt DuoSnsCustomResourceLambda.Arn
       Protocol: lambda
       TopicArn: !Ref DuoSnsCustomResourceTopic
-  
+
   #--------------------------------------------------
   # Create SNS backed Custom Resource
   #--------------------------------------------------
   DuoSnsCustomResource:
-    DependsOn: 
+    DependsOn:
       - DuoSnsCustomResourcePermissionLambda
       - DuoSnsCustomResourceTopicSubscriptionLambda
       - DuoPipelineSnsEvents
@@ -1680,7 +1689,7 @@ Resources:
                 Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${DuoCustomResourceEvent}'
 
   #--------------------------------------------------
-  # Create Lambda function 
+  # Create Lambda function
   # to parse events from SNS and CodePipeline
   #--------------------------------------------------
   DuoSnsCustomResourceLambda:
@@ -1751,10 +1760,10 @@ Resources:
           Action:
           - kms:*
           Resource: "*"
-        - !If 
+        - !If
           - NoKmsAdmin
           - !Ref 'AWS::NoValue'
-          - 
+          -
             Sid: Allow administration of the key
             Effect: Allow
             Principal:
@@ -1862,7 +1871,7 @@ Resources:
                   - 's3:ListBucket'
                   - 's3:DeleteObjectVersion'
                   - 's3:GetObjectVersion*'
-                Resource: 
+                Resource:
                   - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}'
                   - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}/*'
                   - !Sub 'arn:${AWS::Partition}:s3:::${QSS3BucketName}'
@@ -1896,7 +1905,7 @@ Resources:
           ecr_repo = os.environ['DuoEcr']
           artifact_bucket = os.environ['DuoBucket']
           bucket = s3.Bucket(artifact_bucket)
-          
+
           def lambda_handler(event, context):
             print(json.dumps(event))
             source_bucket = event['ResourceProperties']['Source']
@@ -1924,7 +1933,7 @@ Resources:
               cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, '')
             except:
               cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, '')
-          
+
           def delete_all_ecr_images(ecr_repo):
             len_images = ecr.describe_images(repositoryName=ecr_repo)['imageDetails']
             while len(len_images) > 0:
@@ -1952,7 +1961,7 @@ Resources:
 # Outputs
 #--------------------------------------------------
 Outputs:
-  
+
   DuoRadiusProxyVpc:
     Value: !GetAtt GetDirectoryServiceDetails.VpcId
     Description: VPC ID of directory
@@ -1979,7 +1988,7 @@ Outputs:
     Description: Secrets Manager secret that stores the Duo AuthProxy information
   DuoConfigurationSettingsSecretRotationLambdaInvokePermission:
     Value: !Ref DuoConfigurationSettingsSecretRotationLambdaInvokePermission
-    Description: Lambda permission to allow Secrets Manager 
+    Description: Lambda permission to allow Secrets Manager
   DuoConfigurationSettingsSecretRotationSchedule:
     Value: !Ref DuoConfigurationSettingsSecretRotationSchedule
     Description: Secrets Manager Rotation Schedule
@@ -2072,7 +2081,7 @@ Outputs:
     Description: SNS topic for Custom Resource
   DuoSnsCustomResourceTopicSubscriptionLambda:
     Value: !Ref DuoSnsCustomResourceTopicSubscriptionLambda
-    Description: SNS Subscription from Custom Resource to lambda 
+    Description: SNS Subscription from Custom Resource to lambda
   DuoTaskDefinition:
     Value: !Ref DuoTaskDefinition
     Description: ECS Task Definition for Duo AuthProxy
@@ -2121,4 +2130,3 @@ Outputs:
   Postdeployment:
     Value: https://fwd.aws/n7wKB?
     Description: See the deployment guide for post-deployment steps.
- 
