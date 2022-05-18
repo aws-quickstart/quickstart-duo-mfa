@@ -1434,7 +1434,7 @@ Resources:
           - Name: AWS_ACCOUNT_NUMBER
             Type: PLAINTEXT
             Value: !Ref 'AWS::AccountId'
-        Image: 'aws/codebuild/standard:3.0'
+        Image: 'aws/codebuild/standard:5.0'
         Type: LINUX_CONTAINER
         PrivilegedMode: true
       Name: !Sub '${AWS::StackName}'
