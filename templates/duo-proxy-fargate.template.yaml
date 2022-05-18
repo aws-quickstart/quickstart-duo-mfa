@@ -1440,6 +1440,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
+                  - ecr:GetRegistryScanningConfiguration
                   - inspector2:ListFindings
                   - inspector2:ListCoverage
                 Resource: "*"
@@ -1453,6 +1454,7 @@ Resources:
                   - ecr:PutImage
                   - ecr:CompleteLayerUpload
                   - ecr:DescribeImageScanFindings
+                  - ecr:DescribeImages
                 Resource: !GetAtt DuoEcrRepository.Arn
 
 
