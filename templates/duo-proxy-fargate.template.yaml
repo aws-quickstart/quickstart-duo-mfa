@@ -1400,6 +1400,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - inspector2:ListFindings
+                Resource: "*"
+              - Effect: Allow
+                Action:
                   - ecr:GetAuthorizationToken
                 Resource: "*"
               - Effect: Allow
@@ -1413,7 +1417,6 @@ Resources:
                   - ecr:CompleteLayerUpload
                   - ecr:DescribeImageScanFindings
                 Resource: !GetAtt DuoEcrRepository.Arn
-
 
   DuoCodeBuildEcr:
     Type: 'AWS::CodeBuild::Project'
@@ -1431,7 +1434,7 @@ Resources:
           - Name: AWS_ACCOUNT_NUMBER
             Type: PLAINTEXT
             Value: !Ref 'AWS::AccountId'
-        Image: 'aws/codebuild/standard:3.0'
+        Image: 'aws/codebuild/standard:5.0'
         Type: LINUX_CONTAINER
         PrivilegedMode: true
       Name: !Sub '${AWS::StackName}'
