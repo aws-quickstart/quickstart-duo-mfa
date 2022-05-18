@@ -1240,6 +1240,47 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: !GetAtt DuoKmsKey.Arn
+  #--------------------------------------------------
+  # Create S3 Bucket Policy for CodePipeline 
+  # Artifact Bucket
+  #--------------------------------------------------
+  ArtifactBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ArtifactBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:PutObject
+            Effect: Allow
+            Resource: 
+              - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}/*'
+            Principal: 
+              AWS: 
+                - !GetAtt DuoCodeBuildRole.Arn
+                - !GetAtt DuoCodePipelineRole.Arn
+          - Action:
+              - s3:ListBucket
+            Effect: Allow
+            Resource: 
+              - !Sub 'arn:${AWS::Partition}:s3:::${ArtifactBucket}'
+            Principal: 
+              AWS: 
+                - !GetAtt DuoCodeBuildRole.Arn
+                - !GetAtt DuoCodePipelineRole.Arn
+          - Action:
+            - s3:ListBucket
+            Effect: Allow
+            Principal: '*'
+            Resource: !GetAtt ArtifactBucket.Arn
+            Condition:
+              StringLike:
+                'aws:userid': 
+                  - !Join [ '', [ !GetAtt DuoCodeBuildRole.RoleId, ':*' ] ]
+                  - !Join [ '', [ !GetAtt DuoCodePipelineRole.RoleId, ':*' ] ]
+                  
   
   #--------------------------------------------------
   # Create an ECR repository for DuoAuthProxy 
@@ -1249,8 +1290,6 @@ Resources:
     Type: AWS::ECR::Repository
     Properties: 
       RepositoryName: !Ref EcrRepoName
-      ImageScanningConfiguration: 
-        ScanOnPush: "true"
       LifecyclePolicy:
         LifecyclePolicyText: !Sub |
                               {
@@ -1258,7 +1297,7 @@ Resources:
                                   "rulePriority": 1,
                                   "description": "remove older images",
                                   "selection": {
-                                    "tagStatus": "any",
+                                    "tagStatus": "untagged",
                                     "countType": "sinceImagePushed",
                                     "countUnit": "days",
                                     "countNumber": ${EcrImageRetention}
@@ -1390,7 +1429,7 @@ Resources:
             Service: codebuild.amazonaws.com
           Action: sts:AssumeRole
       Path: /
-      ManagedPolicyArns:    
+      ManagedPolicyArns:
       - !Ref DuoCodeBuildPolicy
       - !Ref DuoKmsIamPolicy
       Policies:
@@ -1405,7 +1444,21 @@ Resources:
               - Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
+                  - ecr:GetRegistryScanningConfiguration
+                  - inspector2:Enable
+                  - inspector2:Disable
+                  - inspector2:ListFindings
+                  - inspector2:ListAccountPermissions
+                  - inspector2:ListCoverage
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - iam:CreateServiceLinkedRole
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    iam:AWSServiceName:
+                      - inspector2.amazonaws.com
               - Effect: Allow
                 Action:
                   - ecr:GetDownloadUrlForLayer
@@ -1416,6 +1469,7 @@ Resources:
                   - ecr:PutImage
                   - ecr:CompleteLayerUpload
                   - ecr:DescribeImageScanFindings
+                  - ecr:DescribeImages
                 Resource: !GetAtt DuoEcrRepository.Arn
 
   DuoCodeBuildEcr:
@@ -1541,7 +1595,9 @@ Resources:
       Targets:
         - Arn: !Sub >-
             arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${DuoEcrPipeline}
-          Id: !Ref DuoEcrPipeline
+          # TODO: Replace the ID with a variable again. This previously referenced the corresponding
+          # resource, but TaskCat exceeds the 64 character name length limit even when shortened.
+          Id: DuoEcrPipeline
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
@@ -1556,7 +1612,9 @@ Resources:
       Targets:
         - Arn: !Sub >-
             arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${DuoEcrPipeline}
-          Id: !Ref DuoEcrPipeline
+          # TODO: Replace the ID with a variable again. This previously referenced the corresponding
+          # resource, but TaskCat exceeds the 64 character name length limit even when shortened.
+          Id: DuoEcrPipeline
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
