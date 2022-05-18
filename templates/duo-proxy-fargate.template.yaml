@@ -1532,6 +1532,9 @@ Resources:
     Type: 'AWS::Events::Rule'
     Properties:
       Description: !Sub 'Amazon CloudWatch Rule which triggers the build for DuoAuthProxy ECR when the branch ${CodeCommitBranchName} is updated'
+      Name: !Sub
+        - DuoEcrPipelineCloudWatchEventRule-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ]]
       EventPattern:
         detail:
           event:
@@ -1561,6 +1564,9 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Amazon CloudWatch Rule which triggers the build for DuoAuthProxy ECR on a weekly basis
+      Name: !Sub
+        - DuoEcrPipelineWeeklyTrigger-${StackID}
+        - StackID: !Select [ 2, !Split [ /, !Ref AWS::StackId ] ]
       ScheduleExpression: !Sub 'cron(${EcrCronExpression})'
       Targets:
         - Arn: !Sub >-
