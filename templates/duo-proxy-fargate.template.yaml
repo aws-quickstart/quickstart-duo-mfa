@@ -1429,7 +1429,7 @@ Resources:
             Service: codebuild.amazonaws.com
           Action: sts:AssumeRole
       Path: /
-      ManagedPolicyArns:    
+      ManagedPolicyArns:
       - !Ref DuoCodeBuildPolicy
       - !Ref DuoKmsIamPolicy
       Policies:
@@ -1441,9 +1441,20 @@ Resources:
                 Action:
                   - ecr:GetAuthorizationToken
                   - ecr:GetRegistryScanningConfiguration
+                  - inspector2:Enable
+                  - inspector2:Disable
                   - inspector2:ListFindings
+                  - inspector2:ListAccountPermissions
                   - inspector2:ListCoverage
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - iam:CreateServiceLinkedRole
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    iam:AWSServiceName:
+                      - inspector2.amazonaws.com
               - Effect: Allow
                 Action:
                   - ecr:GetDownloadUrlForLayer
@@ -1581,7 +1592,9 @@ Resources:
       Targets:
         - Arn: !Sub >-
             arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${DuoEcrPipeline}
-          Id: !Ref DuoEcrPipeline
+          # TODO: Replace the ID with a variable again. This previously referenced the corresponding
+          # resource, but TaskCat exceeds the 64 character name length limit even when shortened.
+          Id: DuoEcrPipeline
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
@@ -1596,7 +1609,9 @@ Resources:
       Targets:
         - Arn: !Sub >-
             arn:${AWS::Partition}:codepipeline:${AWS::Region}:${AWS::AccountId}:${DuoEcrPipeline}
-          Id: !Ref DuoEcrPipeline
+          # TODO: Replace the ID with a variable again. This previously referenced the corresponding
+          # resource, but TaskCat exceeds the 64 character name length limit even when shortened.
+          Id: DuoEcrPipeline
           RoleArn: !GetAtt DuoEcrPipelineCloudWatchEventRole.Arn
 
   #--------------------------------------------------
