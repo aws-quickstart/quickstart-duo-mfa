@@ -16,8 +16,8 @@ phases:
       - |
         if [ "$REGISTRY_SCAN_SETTING" = "ENHANCED" ]; then
           IMAGE_SHA=`aws --region ${AWS_REGION} ecr describe-images --repository-name  ${ECR_REPO_NAME} --image-ids imageTag=scan --query 'imageDetails[0].imageDigest' --output text`
-          sleep 60 # this is to allow the scan to complete
-          echo '{"ecrImageRepositoryName": [{"comparison": "EQUALS","value": "'"${ECR_REPO_NAME}"'"}],"ecrImageTags": [{"comparison": "EQUALS","value": "scan"}], "ecrImageHash": [{"comparison": "EQUALS","value": "'"${IMAGE_SHA}"'"}]}' >> filter.json
+          sleep 300 # this is to allow the scan to complete
+          echo '{"ecrImageRepositoryName": [{"comparison": "EQUALS","value": "'"${ECR_REPO_NAME}"'"}],"ecrImageTags": [{"comparison": "EQUALS","value": "scan"}], "ecrImageHash": [{"comparison": "EQUALS","value": "'"${IMAGE_SHA}"'"}], "severity": [{"comparison":"EQUALS","value": "CRITICAL"}]}' >> filter.json
           cat filter.json
           SCAN_FINDINGS=`aws --region ${AWS_REGION} inspector2 list-findings --filter-criteria file://filter.json --query 'length(findings)'`
           echo $SCAN_FINDINGS
