@@ -1,3 +1,0 @@
-// Include details about the license and how they can sign up. If no license is required, clarify that. 
-
-This Quick Start requires a license for Duo MFA. You must set up at least one Duo user whose email address is associated with at least one user in Microsoft Active Directory. For more information, see https://duo.com/editions-and-pricing[Duo Editions & Pricing^]. 
