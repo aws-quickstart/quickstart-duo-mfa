@@ -3,3 +3,31 @@ This Quick Start deploys {partner-product-name} on the AWS Cloud. If you are unf
 // For advanced information about the product that this Quick Start deploys, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/operational/index.html[Operational Guide^].
 
 // For information about using this Quick Start for migrations, refer to the https://{quickstart-github-org}.github.io/{quickstart-project-name}/migration/index.html[Migration Guide^].
+
+On May 26, 2022, Duo released version 5.7.1 of the Duo Authentication Proxy. Please note that this includes patches for two vulnerabilities that result from the third-party Python ipaddress library. 
+
+A first vulnerability rated as critical risk resulted from mishandled IP address strings (https://nvd.nist.gov/vuln/detail/CVE-2021-29921[CVE-2021-29921]). A second vulnerability rated as medium risk resulted from improperly computed hash values in IPv4Interface and IPv6Interface classes (https://nvd.nist.gov/vuln/detail/CVE-2020-14422[CVE-2020-14422]). These vulnerabilities could allow unintended bypass of access controls or expose an application to a denial of service attack.
+
+Duo fixed both ipaddress vulnerabilities in https://duo.com/docs/authproxy-notes[Authentication Proxy version 5.7.1, released May 26, 2022], by updating to Python 3.8.12 and replacing the third-party library with the https://docs.python.org/3/library/ipaddress.html[Python Standard Library ``ipaddress``]. 
+
+Duo always recommends running the latest versions of software to take advantage of security fixes and the latest features. Refer to this https://help.duo.com/s/article/3356[Duo Knowledge Base article] on how to determine your Authentication Proxy version. If you use the Authentication Proxy with https://duo.com/partnerships/technology-partners/select-partners/amazon-web-services[AWS Quick Start], you are already running the latest version and do not need to update. 
+
+A third vulnerability rated as high risk remains unresolved in Authentication Proxy 5.7.1. This vulnerability results from the third-party Python framework Twisted version 21.2.0, which parses HTTP requests without validating that the requests conform to the RFC 7230 standard https://nvd.nist.gov/vuln/detail/CVE-2022-24801([CVE-2022-24801]). This vulnerability exposes HTTP requests handled by the Authentication Proxy to HTTP smuggling exploits that attempt to bypass access controls. The Authentication Proxy is vulnerable to this risk of exploit only if configured to use ``http_proxy``. 
+
+The Duo Authentication Proxy team is preparing to upgrade to Twisted version 22 for an upcoming software release. The Twisted version 21.2.0 ``http_proxy`` vulnerability will remain high-risk until Duo releases a fix in an upcoming version of Authentication Proxy. We will announce the release in the https://community.duo.com/c/release-notes/27[Duo Community Release Notes].
+
+A fourth vulnerability rated as high risk remains present in Authentication Proxy 5.7.1, but the Authentication Proxy team has confirmed that the Authentication Proxy does not use vulnerable RSA decryption API code, and concludes that the Authentication Proxy is not exposed to this high-risk vulnerability. This vulnerability results from the Python library ``python-cryptography`` version 3.2, which is vulnerable to Bleichenbacher timing attacks https://nvd.nist.gov/vuln/detail/CVE-2020-25659([CVE-2020-25659]). This flaw allows an attacker to exploit the RSA decryption API to decrypt RSA ciphertext. The potential threat is unintended access to encrypted session data. A direct ``python-cryptography`` library update is not an option due to OpenSSL dependencies on this library, so the Authentication Proxy team is researching the long-term resolution.
+
+Resources
+
+Docs: https://duo.com/docs/authproxy-notes#version-5.7.1-may-26,-2022[Duo Authentication Proxy - Release Notes Version 5.7.1 - May 26, 2022]
+
+Docs: https://duo.com/docs/authproxy-reference#upgrading-the-proxy[How to upgrade the Duo Authentication Proxy]
+
+Knowledge Base: https://help.duo.com/s/article/3356[How do I determine my installed Duo Authentication Proxy application version?]
+
+Release Notes D241: https://community.duo.com/t/d241-release-notes-for-may-27-2022/12301[Duo Authentication Proxy version 5.7.1 released with security updates]
+
+Duo Community: https://community.duo.com/t/how-to-subscribe-to-release-notes/5531[How to subscribe to Release Notes]
+
+Read more about https://duo.com/partnerships/technology-partners/select-partners/amazon-web-services[Duo + Amazon Web Services]
