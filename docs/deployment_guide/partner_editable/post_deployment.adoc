@@ -50,5 +50,5 @@ After each task is configured, the Amazon ECS service invokes an event that send
 :xrefstyle: short
 [#duo_ecs_service_stable]
 .Steady state message
-[link=images/duo_ecs_service_stable.png]
+[link=docs/deployment_guide/images/duo_ecs_service_stable.png]
 image::../docs/deployment_guide/images/duo_ecs_service_stable.png[Amazon ECS service stable,85%]
