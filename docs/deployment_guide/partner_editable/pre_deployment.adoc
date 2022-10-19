@@ -14,7 +14,7 @@ You must set up at least one Duo user whose email address is associated with at 
 . Obtain the integration key, secret key, and API hostname. You will enter these three items as template parameter values when you deploy this Quick Start. 
 * If directory synchronization is not required, do the following:
 .. Choose *Protect an Application*.
-.. In the applications list, locate the entry for *Auth API*. On the far right, choose *Protect*.
+.. In the applications list, locate the entry for *AWS Directory Services* by searching for *AWS Quick Start*. On the far right, choose *Protect*.
 .. Configure the application, and get your integration key, secret key, and API hostname. Write down these three items. For details, see https://duo.com/docs/protecting-applications[Protecting Applications^]. 
 * If directory synchronization is required, do the following:
 .. Set up directory synchronization by following the steps in https://duo.com/docs/adsync[Synchronizing Users from Active Directory^].
