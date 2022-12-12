@@ -1,11 +1,11 @@
 // Add any unique troubleshooting steps here.
 
-For troubleshooting common Quick Start issues, refer to the https://fwd.aws/rA69w?[AWS Quick Start General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
+For troubleshooting common Partner Solution issues, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^] and https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting CloudFormation^].
 
 If your Directory Service's MFA status is in a *Failed* status, check the following:
 
-. Ensure that the RADIUS ECS tasks have access to the internet. This Quick Start launches the RADIUS ECS tasks in the same subnet as the DNS servers in Directory Service. The subnet must have a route to the internet (typically through a NAT gateway) to install the Duo Authentication Proxy and other required tools used to configure Directory Service.
-. Ensure that the security group associated with the Directory Service DNS servers have a rule that allows output traffic on port 1812 to the security group created by this Quick Start.
+. Ensure that the RADIUS ECS tasks have access to the internet. This Partner Solution launches the RADIUS ECS tasks in the same subnet as the DNS servers in Directory Service. The subnet must have a route to the internet (typically through a NAT gateway) to install the Duo Authentication Proxy and other required tools used to configure Directory Service.
+. Ensure that the security group associated with the Directory Service DNS servers have a rule that allows output traffic on port 1812 to the security group created by this Partner Solution.
 .. To find the security group associated with your DNS servers, open the Directory Service console, and note the IP addresses under *DNS address*.
 .. Open the EC2 console, and choose *Network Interfaces* link from the menu.
 .. In the search field, enter one of the DNS IP addresses you found in the previous step.
