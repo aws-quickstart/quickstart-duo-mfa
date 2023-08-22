@@ -15,6 +15,8 @@ Metadata:
           - VPCCIDR
           - PrivateSubnet1CIDR
           - PrivateSubnet2CIDR
+          - PublicSubnet1CIDR
+          - PublicSubnet2CIDR
       - Label:
           default: Microsoft Active Directory configuration
         Parameters:
@@ -90,6 +92,10 @@ Metadata:
         default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
         default: Private subnet 2 CIDR
+      PublicSubnet1CIDR:
+        default: Public subnet 1 CIDR
+      PublicSubnet2CIDR:
+        default: Public subnet 2 CIDR
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3BucketRegion:
@@ -218,6 +224,16 @@ Parameters:
     Default: 10.0.32.0/19
     Description: CIDR block for private subnet 2 located in Availability Zone 2.
     Type: String
+  PublicSubnet1CIDR:
+    Default: 10.0.128.0/20
+    Description: CIDR block for the public subnet 2 located in Availability Zone
+      2.
+    Type: String
+  PublicSubnet2CIDR:
+    Default: 10.0.144.0/20
+    Description: CIDR block for the optional public subnet 3 located in Availability
+      Zone 3.
+    Type: String
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription:
@@ -295,6 +311,8 @@ Resources:
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR: !Ref 'PrivateSubnet1CIDR'
         PrivateSubnet2ACIDR: !Ref 'PrivateSubnet2CIDR'
+        PublicSubnet1CIDR: !Ref 'PublicSubnet1CIDR'
+        PublicSubnet2CIDR: !Ref 'PublicSubnet2CIDR'
         VPCCIDR: !Ref 'VPCCIDR'
   ADStack:
     Type: AWS::CloudFormation::Stack
