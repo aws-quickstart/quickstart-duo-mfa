@@ -35,7 +35,7 @@ After you launch the stack, verify your deployment and, if desired, modify your 
 
 === Modify your implementation
 
-If you want to increase or decrease the number of RADIUS tasks after deploying the Quick Start, update the AWS CloudFormation stack and specify the desired number of servers. Then perform a stack update. If you increase the number of tasks, the Amazon ECS service starts up that number of new tasks and installs and configures the Duo Authentication Proxy service for each. 
+If you want to increase or decrease the number of RADIUS tasks after deploying the Partner Solution, update the AWS CloudFormation stack and specify the desired number of servers. Then perform a stack update. If you increase the number of tasks, the Amazon ECS service starts up that number of new tasks and installs and configures the Duo Authentication Proxy service for each. 
 
 . Open the AWS CloudFormation console.
 
